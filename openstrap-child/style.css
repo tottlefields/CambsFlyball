@@ -1,0 +1,76 @@
+/*
+Theme Name: Cambridgeshire Flyball (Openstrap)
+Theme URI:
+Version: 1.0.0
+Template: openstrap
+*/
+
+#main-container img { margin: 5px;} 
+#main-container img.aligncenter { margin-left: auto;  margin-right: auto; }
+
+.navbar-nav {font-size: 13px; }
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus,
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus,
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus,
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus,
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+	background-color:#a12525
+}
+.navbar-static-top { border-bottom: 0px; }
+.dropdown-menu {
+	background-color: #222222;
+}
+.dropdown-menu > li > a {
+	color: #cccccc;
+}
+.navbar { min-height:40px; }
+
+
+#header-top a:hover, #header-top a:focus { text-decoration: none; color: #ae9f9f; }
+a, a:hover, a:focus { color: #a12525; }
+
+p {
+    font-size: 14px;
+    line-height: 25px;
+}
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+	background-color: transparent;
+}
+.navbar-inverse .navbar-toggle {
+	border-color: transparent;
+}
+
+.btn-success, .btn-primary, input[type="submit"] {
+	background-color: #a12525;
+	border-color: #a12525;
+}
+
+.carousel-caption { padding-bottom: 0px }
+.carousel-indicators, .carousel-control { display: none; }
+.front-page-blurb h1 { display: none; }
+
+
+@media (min-width: 768px) {
+  .navbar-nav > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+@media (max-width: 767px) {
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {
+    border-color: #a12525;
+  }
+  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
+    background-color: #a12525;
+  }
+	.carousel-caption {
+		right: 15px;
+    left: 15px;
+	}
+}
