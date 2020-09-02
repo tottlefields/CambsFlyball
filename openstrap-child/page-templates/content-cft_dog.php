@@ -82,7 +82,7 @@
 					  </div>
 					  
 					  <div class="form-group">
-					    <label class="col-sm-6 col-md-4 control-label">Current Team</label>
+					    <label class="col-sm-6 col-md-4 control-label">Team</label>
 					    <div class="col-sm-6 col-md-8"><p class="form-control-static">
 					    <?php 
 					    $team = get_field('team');
