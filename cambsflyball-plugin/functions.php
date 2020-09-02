@@ -18,19 +18,27 @@ require_once 'posttypes.php';
 //require_once 'custom-metaboxes.php';
 //require_once 'ukfl-gocardless.php';
 
-//Google Custom Search Widget
-//require(get_template_directory() . '/inc/widgets/openstrap-google-cse-widget.php');
-
-//Social Icon Box
-//require(get_template_directory() . '/inc/widgets/openstrap-social-box-widget.php');
 
 //Front Page Text
 require('widgets/wpb-widget.php');
-
-//Feedburner Subscription
-//require(get_template_directory() . '/inc/widgets/openstrap-feedburner-widget.php');
 
 function cft_load_custom_widgets() {
         register_widget( 'wpb_widget' );
 }
 add_action('widgets_init', 'cft_load_custom_widgets');
+
+
+
+add_action('acf/save_post', 'my_acf_save_post');
+function my_acf_save_post( $post_id ) {
+	
+	// Get newly saved values.
+	//$values = get_fields( $post_id );
+	
+	// Check the new value of a specific field.
+	$team = get_field('team');
+	if( $team ){
+		update_field( 'team_name', $team->post_title, $post_id );
+	}
+	else { update_field( 'team_name', '', $post_id ); }
+}
