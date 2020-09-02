@@ -56,6 +56,11 @@ p {
 .front-page-blurb h1 { display: none; }
 
 
+
+#dog_details .form-group { margin-bottom: 0px; }
+#dog_details .control-label, #dog_details .form-control-static { padding-top: 0px; line-height: 25px; }
+
+
 @media (min-width: 768px) {
   .navbar-nav > li > a {
     padding-top: 10px;

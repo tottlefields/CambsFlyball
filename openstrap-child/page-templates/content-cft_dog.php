@@ -55,8 +55,107 @@
 	</header>
 	
 	<div class="entry-content">
+		<div class="row" id="dog_details">
+			<div class="col-xs-6 col-sm-4 col-md-3"><?php the_post_thumbnail('thumbnail', ['class' => 'img-responsive responsive--full pull-left', 'title' => the_title_attribute( 'echo=0' ) ]); ?></div>
+			<div class="hidden-xs col-sm-4 col-md-4">
+				<div class="row">
+					<form class="form-horizontal">
+					
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">Handled By</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo get_field('handler')->user_firstname; ?></p></div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">Breed</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo get_the_terms( get_the_ID(), 'dog-breeds')[0]->name; ?></p></div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">DOB</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo get_field('date_of_birth'); ?></p></div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">First Comp</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo get_field('date_first_comp'); ?></p></div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">Current Team</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static">
+					    <?php 
+					    $team = get_field('team');
+					    if (isset($team)){
+					    	echo '<a href="'.get_permalink( $team->ID ).'">'.$team->post_title.'</a>';
+					    }
+					    else{
+					    	echo '&nbsp;';
+					    } ?></p></div>
+					  </div>
+					  
+					  <?php 
+					  $ukfl_no = get_field('ukfl_number');
+					  if (isset($ukfl_no)){ ?>
+					  
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">UKFL No</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><a href="https://www.ukflyball.org.uk/dogs/<?php echo $ukfl_no; ?>" title="<?php echo esc_attr( sprintf( __( 'UKFL Page for %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" target="_blank"><?php echo $ukfl_no;?></a></p></div>
+					  </div>
+					  
+					  <?php 
+					  $ukfl_height = get_field('ukfl_height');
+					  if ($ukfl_height == 12){ $ukfl_height = 'FH'; }
+					  elseif ($ukfl_height == 0){ $ukfl_height = '&nbsp'; }
+					  else{ $ukfl_height = $ukfl_height.'"'; }
+					  ?>
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">UKFL Height</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo $ukfl_height; ?></p></div>
+					  </div>
+					  
+					  <?php $ukfl_points = get_field('ukfl_points');?>
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">UKFL Points</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo number_format($ukfl_points, 0); ?></p></div>
+					  </div>
+					  					  
+					  <?php } ?>
+					  
+					  <?php $pb_time = get_field('fastest_time');
+					  if ($pb_time > 0){ ?>
+					  <div class="form-group">
+					    <label class="col-sm-6 col-md-4 control-label">PB Time</label>
+					    <div class="col-sm-6 col-md-8"><p class="form-control-static"><?php echo number_format($pb_time, 2); ?>s (<?php echo get_field('date_fastest_time'); ?>)</p></div>
+					  </div>
+					  <?php } ?>
+					  
+					  
+					  
+					  
+					</form>
+				</div>
+			</div>
+			<div class="hidden-xs hidden-sm col-md-2">
+				<div class="row">
+					<div class="col-md-12">
+						<strong><small>Awards Gained</small></strong><small>
+						<ul>
+						<li>FD (19/03/2011)</li>
+						</ul>
+					</small></div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-sm-4 col-md-3">
+			<?php $pic2 = get_post_meta( get_the_ID() , 'flyball_photo', true );
+			if ( isset($pic2) && $pic2 > 0 ) :
+				echo wp_get_attachment_image( $pic2, 'thumbnail', "", array( "class" => "img-responsive responsive--full pull-right" ) );
+			endif; ?>
+			</div>
+		</div>
+			
+	</div>
 	<?php the_content(); ?>
-	Hello World!
 	
 	
 	

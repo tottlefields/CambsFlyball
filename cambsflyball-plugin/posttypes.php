@@ -81,7 +81,7 @@ function register_custom_posttypes() {
 					'capabilities' => array( 'assign_terms' => 'read' )
 					)
 			);
-/*	register_taxonomy('dog-breeds', array('cft_dog'),
+	register_taxonomy('dog-breeds', array('cft_dog'),
 			array(
 					'hierarchical' => false,
 					'label' => 'Dog Breeds',
@@ -92,7 +92,6 @@ function register_custom_posttypes() {
 					)
 			)
 	);
- */	
 }
 // Hooking up our function to theme setup
 add_action( 'init', 'register_custom_posttypes' );
@@ -147,6 +146,7 @@ function cft_team_custom_columns($columns) {
 			if ($key == 'author') { // Put the TEAM column before the Author/Owner column
 				$new['team'] = 'Team';
 				$new['ukfl_no'] = 'UKFL No';
+				$new['ukfl_points'] = 'UKFL Points';
 			}
 			$new[$key] = $title;
 		}
@@ -163,6 +163,10 @@ function cft_team_show_columns($column, $post_id){
 		case 'team':			
 			$team = get_field('team');
 			if( $team ):  echo esc_html( $team->post_title ); endif;
+			break;
+		case 'ukfl_points':
+			$points = get_field('ukfl_points');
+			if($points > 0){ echo number_format($points, 0); }
 			break;
 		case 'ukfl_no':
 			$ukfl = get_field('ukfl_number');
