@@ -56,7 +56,7 @@ get_header(); ?>
 				 * (where ___ is the post format) and that will be used instead.
 				 */
 			?>
-			<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+			<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 				<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
 			</div>
 			<?php 
