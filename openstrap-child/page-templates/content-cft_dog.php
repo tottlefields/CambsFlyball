@@ -55,9 +55,9 @@
 	</header>
 	
 	<div class="entry-content">
-		<div class="row" id="dog_details">
-			<div class="col-xs-6 col-sm-4 col-md-3"><?php the_post_thumbnail('thumbnail', ['class' => 'img-responsive responsive--full pull-left', 'title' => the_title_attribute( 'echo=0' ) ]); ?></div>
-			<div class="hidden-xs col-sm-4 col-md-4">
+		<div class="row dog_details">
+			<div class="hidden-sm col-xs-6 col-sm-4 col-md-3"><?php the_post_thumbnail('thumbnail', ['class' => 'img-responsive responsive--full pull-left', 'title' => the_title_attribute( 'echo=0' ) ]); ?></div>
+			<div class="hidden-xs col-sm-8 col-md-6 col-lg-4">
 				<div class="row">
 					<form class="form-horizontal">
 					
@@ -130,13 +130,10 @@
 					  </div>
 					  <?php } ?>
 					  
-					  
-					  
-					  
 					</form>
 				</div>
 			</div>
-			<div class="hidden-xs hidden-sm col-md-2">
+			<div class="visible-lg col-lg-2">
 				<div class="row">
 					<div class="col-md-12">
 						<strong><small>Awards Gained</small></strong><small>
@@ -153,7 +150,86 @@
 			endif; ?>
 			</div>
 		</div>
-			
+		<div class="row dog_details visible-xs">
+			<div class="col-xs-12">
+				<form class="form-horizontal">
+					
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">Handled By</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo get_field('handler')->user_firstname; ?></p></div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">Breed</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo get_the_terms( get_the_ID(), 'dog-breeds')[0]->name; ?></p></div>
+					  </div>
+					  
+					  <!-- <div class="form-group">
+					    <label class="col-xs-6 control-label">DOB</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo get_field('date_of_birth'); ?></p></div>
+					  </div>
+					  
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">First Comp</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo get_field('date_first_comp'); ?></p></div>
+					  </div> -->
+					  
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">Team</label>
+					    <div class="col-xs-6"><p class="form-control-static">
+					    <?php 
+					    $team = get_field('team');
+					    if (isset($team)){
+					    	$team_name = $team->post_title;
+					    	$team_name = str_ireplace('Cambridgeshire', '', $team_name);
+					    	$team_name = str_ireplace('Tottlefields', '', $team_name);
+					    	echo '<a href="'.get_permalink( $team->ID ).'">'.$team_name.'</a>';
+					    }
+					    else{
+					    	echo '&nbsp;';
+					    } ?></p></div>
+					  </div>
+					  
+					  <?php 
+					  $ukfl_no = get_field('ukfl_number');
+					  if (isset($ukfl_no)){ ?>
+					  
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">UKFL No</label>
+					    <div class="col-xs-6"><p class="form-control-static"><a href="https://www.ukflyball.org.uk/dogs/<?php echo $ukfl_no; ?>" title="<?php echo esc_attr( sprintf( __( 'UKFL Page for %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" target="_blank"><?php echo $ukfl_no;?></a></p></div>
+					  </div>
+					  
+					  <?php 
+					  $ukfl_height = get_field('ukfl_height');
+					  if ($ukfl_height == 12){ $ukfl_height = 'FH'; }
+					  elseif ($ukfl_height == 0){ $ukfl_height = '&nbsp'; }
+					  else{ $ukfl_height = $ukfl_height.'"'; }
+					  ?>
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">UKFL Height</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo $ukfl_height; ?></p></div>
+					  </div>
+					  
+					  <?php $ukfl_points = get_field('ukfl_points');?>
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">UKFL Points</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo number_format($ukfl_points, 0); ?></p></div>
+					  </div>
+					  					  
+					  <?php } ?>
+					  
+					  <?php $pb_time = get_field('fastest_time');
+					  if ($pb_time > 0){ ?>
+					  <div class="form-group">
+					    <label class="col-xs-6 control-label">PB Time</label>
+					    <div class="col-xs-6"><p class="form-control-static"><?php echo number_format($pb_time, 2); ?>s (<?php echo get_field('date_fastest_time'); ?>)</p></div>
+					  </div>
+					  <?php } ?>
+				
+				
+				</form>
+			</div>
+		</div>
 	</div>
 	<?php the_content(); ?>
 	
