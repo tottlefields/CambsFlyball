@@ -189,11 +189,14 @@
 					    <div class="col-xs-6"><p class="form-control-static">
 					    <?php 
 					    $team = get_field('team');
-					    if (isset($team)){
+					    if (isset($team) && $team != ''){
 					    	$team_name = $team->post_title;
 					    	$team_name = str_ireplace('Cambridgeshire', '', $team_name);
 					    	$team_name = str_ireplace('Tottlefields', '', $team_name);
 					    	echo '<a href="'.get_permalink( $team->ID ).'">'.$team_name.'</a>';
+					    }
+					    elseif (get_field('retired') && get_field('retired') == 1){
+					    	echo '<span class="text-muted"><em>Retired ('.get_field('date_retired').')</em></span>';
 					    }
 					    else{
 					    	echo '&nbsp;';
@@ -202,7 +205,7 @@
 					  
 					  <?php 
 					  $ukfl_no = get_field('ukfl_number');
-					  if (isset($ukfl_no)){ ?>
+					  if (isset($ukfl_no) && $ukfl_no != ''){ ?>
 					  
 					  <div class="form-group">
 					    <label class="col-xs-6 control-label">UKFL No</label>
