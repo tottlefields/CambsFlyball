@@ -86,8 +86,11 @@
 					    <div class="col-sm-6 col-md-8"><p class="form-control-static">
 					    <?php 
 					    $team = get_field('team');
-					    if (isset($team)){
+					    if (isset($team) && $team != ''){
 					    	echo '<a href="'.get_permalink( $team->ID ).'">'.$team->post_title.'</a>';
+					    }
+					    elseif (get_field('retired') && get_field('retired') == 1){
+					    	echo '<span class="text-muted"><em>Retired ('.get_field('date_retired').')</em></span>';
 					    }
 					    else{
 					    	echo '&nbsp;';
@@ -96,7 +99,7 @@
 					  
 					  <?php 
 					  $ukfl_no = get_field('ukfl_number');
-					  if (isset($ukfl_no)){ ?>
+					  if (isset($ukfl_no) && $ukfl_no != ''){ ?>
 					  
 					  <div class="form-group">
 					    <label class="col-sm-6 col-md-4 control-label">UKFL No</label>
@@ -137,9 +140,16 @@
 				<div class="row">
 					<div class="col-md-12">
 						<strong><small>Awards Gained</small></strong><small>
-						<ul>
-						<li>FD (19/03/2011)</li>
+						<?php $awards = get_cft_dog_awards(get_the_ID());						
+						if (count($awards) >0){ ?>
+						<ul style="padding-inline-start:15px;">
+						<?php foreach ($awards as $award){ ?>
+							<li><?php echo $award->award; ?> <small>(<?php echo $award->formatted_date; ?>)</small></li>
+						<?php } ?>
 						</ul>
+						<?php } else { ?>
+						<p class="text-muted"><em>No awards earned yet.</em></p>
+						<?php } ?>
 					</small></div>
 				</div>
 			</div>

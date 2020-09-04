@@ -48,24 +48,51 @@ get_header(); ?>
 
 			<div class="row">	
 			<?php
+			$retired_dogs = array();
 			/* Start the Loop */
 			while ( have_posts() ) : the_post();
+			
+				if (get_field('retired') && get_field('retired') == 1){
+					array_push($retired_dogs, $post);
+					continue;
+				}
 
 				/* Include the post format-specific template for the content. If you want to
 				 * this in a child theme then include a file called called content-___.php
 				 * (where ___ is the post format) and that will be used instead.
 				 */
 			?>
-			<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-				<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
-			</div>
+				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+					<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
+				</div>
 			<?php 
 
 			endwhile;
 
-			openstrap_content_nav( 'nav-below' );
-			?>
-			</div>
+			//openstrap_content_nav( 'nav-below' );
+			
+			if (count($retired_dogs) > 0) : ?>
+			</div><!-- row -->
+			
+			<header class="archive-header">
+				<h1 class="archive-title">Our Retired Dogs</h1>
+			</header><!-- .archive-header -->
+			
+			
+			<div class="row">
+			<?php 
+			while (list($i, $post) = each($retired_dogs)) :
+    			setup_postdata($post); ?>
+				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+					<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
+				</div>
+			
+			<?php endwhile;
+			// don't forget to restore the main queried object after the loop!
+			wp_reset_postdata();?>
+			
+			<?php endif; ?>
+			</div><!-- row -->
 
 		<?php else : ?>
 			<?php get_template_part( 'content', 'none' ); ?>
