@@ -8,3 +8,20 @@ function get_cft_dog_awards ($dog_id){
 	return $awards;
 	
 }
+
+function get_dogs_for_team($team_id){
+	global $wpdb;
+	
+	$args = array(
+			'post_type'     => 'cft_dog',
+			'post_status'   => array('publish'),
+			'posts_per_page'=> -1,
+			'meta_query' => array(array('key' => 'team', 'value' => $team_id, 'compare' => '=')),
+			'order'		=> 'ASC'
+	);
+	
+	$dogs = get_posts($args);
+	
+	return $dogs;
+	
+}

@@ -38,7 +38,7 @@ function register_custom_posttypes() {
 			'exclude_from_search' 	=> false,
 			'hierarchical'			=> false,
 			'rewrite'				=> array( 'slug' => get_option('cft_team_slug','teams') ),
-			'supports' 				=> array( 'title', 'author', 'thumbnail', 'custom-fields' ),
+			'supports' 				=> array( 'title', 'author', 'custom-fields' ),
 			'has_archive' 			=> true,
 			'show_in_nav_menus' 	=> true,
 			'menu_icon' 			=> 'dashicons-shield',
@@ -75,12 +75,22 @@ function register_custom_posttypes() {
 	register_taxonomy('club', array('cft_team'),
 			array(
 					'hierarchical' => false,
-					'label' => 'Categories',
-					'singular_label' => 'Category',
+					'label' => 'Parent Club',
+					'singular_label' => 'Club',
 					'rewrite' => true,
 					'capabilities' => array( 'assign_terms' => 'read' )
 					)
 			);
+	register_taxonomy('team-type', array('cft_team'),
+			array(
+				'hierarchical' => false,
+				'label' => 'Team Type',
+				'show_ui' => true,
+				'update_count_callback' => '_update_post_term_count',
+				'query_var' => true,
+				'rewrite' => array( 'slug' => 'tag' )
+			)
+	);
 	register_taxonomy('dog-breeds', array('cft_dog'),
 			array(
 					'hierarchical' => false,

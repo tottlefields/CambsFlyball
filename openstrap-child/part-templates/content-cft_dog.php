@@ -1,7 +1,7 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> >
 <?php if ( has_post_thumbnail()) : ?>
 	<div>
-		<a href="<?php the_permalink(); ?>" class="th" title="<?php the_title_attribute(); ?>" ><?php the_post_thumbnail('thumbnail', ['class' => 'no-margin']); ?></a>
+		<a href="<?php the_permalink(); ?>" class="th" title="<?php the_title_attribute(); ?>" ><?php the_post_thumbnail('thumbnail'); ?></a>
 	</div>
 <?php endif; ?>
 	<h4 class="text-center">
