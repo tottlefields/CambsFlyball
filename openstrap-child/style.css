@@ -5,8 +5,11 @@ Version: 1.0.0
 Template: openstrap
 */
 
-/* #main-container img { margin: 5px;} 
-#main-container img.no-margin { margin: 0px;} */ 
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css");
+
+ 
 #main-container img.aligncenter { margin-left: auto;  margin-right: auto; }
 
 .featured-img-center { float: none; padding-right: 0px; text-align: center; }
@@ -17,16 +20,16 @@ Template: openstrap
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus,
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus,
-.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus,
-.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus,
+.navbar-inverse .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus,
+.navbar-inverse .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus,
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
 	background-color:#a12525
 }
 .navbar-static-top { border-bottom: 0px; }
-.dropdown-menu {
+.navbar-inverse .dropdown-menu {
 	background-color: #222222;
 }
-.dropdown-menu > li > a {
+.navbar-inverse .dropdown-menu > li > a {
 	color: #cccccc;
 }
 .navbar { min-height:40px; }
@@ -47,9 +50,14 @@ p {
 	border-color: transparent;
 }
 
-.btn-success, .btn-primary, input[type="submit"] {
+.btn-primary, input[type="submit"] {
 	background-color: #a12525;
 	border-color: #a12525;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+    background-color: #7c1922;
+    border-color: #7c1922;
 }
 
 .carousel-caption { padding-bottom: 0px }

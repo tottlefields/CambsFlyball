@@ -89,6 +89,33 @@ function getUserTransYear($year, $user){
 	
 }
 
+function getRecentAccounts(){
+	global $wpdb;	
+	
+	$transactions = $wpdb->get_results("select date_in, case when method='INVOICE' then concat_ws(':', method, category, event_desc) else concat_ws(':', method, user_id) end as groupCol,
+	method, category, case when method='INVOICE' then event_desc else group_concat(distinct u.display_name) end as description, sum(amount) as total, group_concat(distinct user_id) as users, 
+	count(distinct user_id) as count
+	from cft_members_money m inner join wp_users u on m.user_id=u.id
+	WHERE date_in > DATE_SUB(CURDATE(), INTERVAL 2 MONTH) and date_in <= CURDATE() group by 1,2 order by 1 desc,2");
+	
+	return $transactions;
+}
+
+function addPayment($date, $amount, $user_id, $method, $description=null){
+	global $wpdb;
+	
+	$wpdb->insert('cft_members_money', array(
+			'date_in' => dateToSQL($date),
+			'amount' => $amount,
+			'user_id' => $user_id,
+			'method' => $method,
+			'description' => $description
+	));
+	$insert_id = $wpdb->insert_id;
+	
+	return $insert_id;
+	
+}
 
 
 

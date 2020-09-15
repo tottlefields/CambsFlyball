@@ -142,9 +142,6 @@ get_header();
 			</div>
 	                
 	        </div><!-- .entry-content -->
-	        <footer class="entry-meta">
-	                <?php edit_post_link( __( 'Edit', 'openstrap' ), '<span class="edit-link">', '</span>' ); ?>
-	        </footer><!-- .entry-meta -->
 		</article><!-- #post -->
 	
 	<?php openstrap_custom_pagination(); ?>
