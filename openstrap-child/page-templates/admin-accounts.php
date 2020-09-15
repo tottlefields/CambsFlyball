@@ -9,11 +9,84 @@
  */
 
 if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
-	debug_array($_FILES);
-	debug_array($_REQUEST);
-	wp_die();
-	//addPayment($_REQUEST['date_in'], $_REQUEST['amount'], $_REQUEST['user_id'], $_REQUEST['method'], $_REQUEST['description']);
-	//wp_safe_redirect('/admin/club-members/'); exit;
+	
+	$event_desc = $_REQUEST['event_desc'];
+	$date_in = $_REQUEST['date_in'];
+	$category = $_REQUEST['category'];
+	$invoices = array();
+	
+	if (isset($_FILES['csv_file'])){
+		if(is_uploaded_file($_FILES['csv_file']['tmp_name'])){
+			$handle = fopen($_FILES['csv_file']['tmp_name'], "r");
+			while (($data = fgets($handle, 1000)) !== FALSE) {
+				if (preg_match("/^NAME/", $data)){
+					continue;
+				}
+				
+				$data_parts = preg_split("/[,|\t]/", rtrim($data));
+				#$data_parts => NAME NUMBER MEMB_ID QUANTITY RATE
+				if ($data_parts[0] == ""){ continue; }
+	
+				$description = '';
+				switch ($category) {
+					case "Flyball":
+						$description = "Training - ".$event_desc;
+						break;
+					case "Bonus Ball":
+						$description = $event_desc;
+						break;
+					case "Entry Fees":
+						$description = $event_desc." - ".$data_parts[0];
+						break;
+					case "Camping":
+						$description = $event_desc." - ".$category;
+						break;
+					case "Membership":
+						$description = $category." - ".$data_parts[0];
+						break;
+					case "Special Event":
+						if ($data_parts[2] == $data_parts[1]){
+							$description = $event_desc;
+						}
+						else {
+							$description = $event_desc." - ".$data_parts[0];
+						}
+						break;
+					case "Merchandise":
+						if ($data_parts[2] == $data_parts[1]){
+							$description = $event_desc;
+						}
+						else {
+							$description = $event_desc." - ".$data_parts[0];
+						}
+						break;
+				}
+				
+				$invoice = array(
+						"description"	=> $description,
+						"quantity"		=> $data_parts[3],
+						"price"			=> $data_parts[4],
+						"total_amount"	=> $data_parts[3] * $data_parts[4]
+				);
+				
+				if(!isset($invoices[$data_parts[2]])){
+					$invoices[$data_parts[2]] = array();
+				}
+				array_push($invoices[$data_parts[2]], $invoice);
+			}
+		}
+	}
+	
+	foreach ($invoices as $user_id => $all_invoices){
+		
+		foreach ($all_invoices as $invoice){
+			addInvoice($date_in, $invoice['total_amount'], $user_id, $category, $event_desc, $description);
+		}
+			
+		//EMAIL.....!
+	}
+	
+	wp_safe_redirect('/admin/accounts/'); exit;
 }
 
 
@@ -62,7 +135,7 @@ get_header(); ?>
 																	<option value="" hidden>Category</option>
 																	<option value="Flyball">Training Fees</option>
 																	<option value="Entry Fees">Entry Fees</option>
-																	<option value="Camping Fees">Camping Fees</option>
+																	<option value="Camping">Camping Fees</option>
 																	<option value="Special Event">Special Event</option>
 																	<option value="Bonus Ball">Bonus Ball</option>
 																	<option value="Membership">Membership</option>
@@ -75,8 +148,8 @@ get_header(); ?>
 															</div>
 															
 															<div class="col-md-3">
-																<label class="btn btn-default btn-block" for="my-file-selector" id="upload-file-btn">
-																	<input id="my-file-selector" type="file" style="display:none" onchange="jQuery('#upload-file-label').html(this.files[0].name);jQuery('#upload-file-btn').addClass('btn-success');">
+																<label class="btn btn-default btn-block" for="csv_file" id="upload-file-btn">
+																	<input id="csv_file" name="csv_file" type="file" style="display:none" onchange="jQuery('#upload-file-label').html(this.files[0].name);jQuery('#upload-file-btn').addClass('btn-success');">
 																	<span id="upload-file-label">Choose File</span>
 																</label>
 																<!-- <span class='label label-info' id="upload-file-info"></span> -->
@@ -98,11 +171,12 @@ get_header(); ?>
 	                <?php $transactions = getRecentAccounts(); ?>
 	                
 	                <table class="table">
-	                	<thead><tr><th>Date</th><th>Method</th><th >Description</th><th class="text-right">Amount</th></tr></thead><tbody>
+	                	<thead><tr><th>Date</th><th>Method</th><th class="hidden-xs">Category</th><th >Description</th><th class="text-right">Amount</th></tr></thead><tbody>
 						<?php foreach ($transactions as $row){ ?>
 							<tr>
 								<td style="white-space:nowrap;"><?php echo SQLToDate($row->date_in, 'd-M'); ?></td>
 								<td><?php echo $row->method; ?></td>
+								<td class="hidden-xs"><?php echo $row->category; ?></td>
 								<td>
 								<?php if ($row->count == 1) { echo '<a href="/members-only/account/?cft-member='.$row->users.'">'.$row->description.'</a>'; } else { echo $row->description; } ?>
 								</td>
