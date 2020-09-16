@@ -42,6 +42,9 @@ function sort_teams_correctly( $query ) {
 		$query->set('order', 'ASC');
 		
 	}
+	if( isset($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'cft_dog' && $query->is_main_query() ) {
+		$query->set('posts_per_page', -1 );
+	}
 	return $query;
 }
 
