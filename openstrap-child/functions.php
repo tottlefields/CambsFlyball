@@ -37,7 +37,7 @@ function sort_teams_correctly( $query ) {
 	}
 	if( isset($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'cft_team' && $query->is_main_query() ) {
 		
-		$query->set('orderby', 'meta_value');
+		$query->set('orderby', 'meta_value_num');
 		$query->set('meta_key', 'sort_order');
 		$query->set('order', 'ASC');
 		
