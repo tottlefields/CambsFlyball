@@ -16,8 +16,9 @@ function get_dogs_for_team($team_id){
 			'post_type'     => 'cft_dog',
 			'post_status'   => array('publish'),
 			'posts_per_page'=> -1,
-			'meta_query' => array(array('key' => 'team', 'value' => $team_id, 'compare' => '=')),
-			'order'		=> 'ASC'
+			'meta_query'	=> array(array('key' => 'team', 'value' => $team_id, 'compare' => '=')),
+			'orderby'		=> 'name',
+			'order'			=> 'ASC'
 	);
 	
 	$dogs = get_posts($args);
@@ -33,8 +34,7 @@ function get_dogs_for_user($user){
 			'post_type'     => 'cft_dog',
 			'post_status'   => array('publish'),
 			'posts_per_page'=> -1,
-			'author'        =>  $user->ID,
-			'order'			=> 'ASC'
+			'author'        =>  $user->ID
 	);
 	
 	$dogs = get_posts($args);
