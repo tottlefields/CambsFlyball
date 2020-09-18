@@ -179,7 +179,11 @@ function cft_team_custom_columns($columns) {
 
 function cft_team_show_columns($column, $post_id){
 	switch ($column) {
-		case 'team':			
+		case 'team':
+			if (get_field('retired') && get_field('retired') == 1){
+				echo '<em>Retired</em>';
+				break;
+			}
 			$team = get_field('team');
 			if( $team ):  echo esc_html( $team->post_title ); endif;
 			break;
