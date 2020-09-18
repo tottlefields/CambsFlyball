@@ -31,7 +31,7 @@ get_header(); ?>
 	        <div class="entry-content">
 	                <?php the_content(); ?>
 	                
-	                <?php $users = get_users( [ 'role__in' => [ 'contributor', 'editor' ] ] ); //debug_array($users); ?>
+	                <?php $users = get_users( [ 'role__in' => [ 'author', 'editor' ] ] ); //debug_array($users); ?>
 	                
 	                <div class="row">
 	                	<div class="col-md-12 hidden-xs hidden-sm">
