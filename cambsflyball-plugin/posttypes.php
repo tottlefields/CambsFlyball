@@ -102,6 +102,15 @@ function register_custom_posttypes() {
 					)
 			)
 	);
+	
+	register_post_status( 'retired', array(
+			'label'                     => _x( 'Retired', 'cft_dog'),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			'label_count'               => _n_noop( 'Retired <span class="count">(%s)</span>', 'Retired <span class="count">(%s)</span>' )
+	) );
 }
 // Hooking up our function to theme setup
 add_action( 'init', 'register_custom_posttypes' );

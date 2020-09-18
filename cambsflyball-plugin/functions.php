@@ -34,6 +34,16 @@ function my_acf_save_post( $post_id ) {
 	
 	// Get newly saved values.
 	//$values = get_fields( $post_id );
+		
+	// Check the new value of a specific field.	
+	$retired = get_field('retired');
+	if ($retired == 1) { 
+		$my_post = array(
+				'ID'            => $post_id,
+				'post_status'   => 'retired'
+		);
+		wp_update_post( $my_post );
+	};
 	
 	// Check the new value of a specific field.
 	$team = get_field('team');
@@ -42,3 +52,10 @@ function my_acf_save_post( $post_id ) {
 	}
 	else { update_field( 'team_name', '', $post_id ); }
 }
+
+
+
+
+
+
+
