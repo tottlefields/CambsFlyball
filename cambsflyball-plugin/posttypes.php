@@ -199,6 +199,8 @@ function cft_team_show_columns($column, $post_id){
 			break;	
 		case 'image':
 			echo get_the_post_thumbnail( $post_id, array(80, 80) );
+			$pic2 = get_post_meta( $post_id , 'flyball_photo', true );
+			echo wp_get_attachment_image( $pic2, array(80, 80));
 			break;
 	}
 }
