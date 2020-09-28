@@ -15,7 +15,7 @@
 		</hgroup>
 		
 		<?php $dogs = get_dogs_for_team(get_the_ID());
-		if (count($dogs>0)){ ?>
+		if (count($dogs)>0){ ?>
 		<h5>Dogs in this team -<?php foreach ($dogs as $dog){ echo ' <a href="'.get_permalink( $dog->ID ).'">'.$dog->post_title.'</a>'; }?></h5>
 		<?php } else { ?>
 		<h5><em>This team is not currently active or racing.</em></h5>
