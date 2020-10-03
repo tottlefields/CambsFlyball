@@ -42,7 +42,12 @@ if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 						$description = $event_desc." - ".$category;
 						break;
 					case "Membership":
-						$description = $category." - ".$data_parts[0];
+						if($event_desc != ''){
+							$description = $event_desc;
+						}
+						else{
+							$description = $category." - ".$data_parts[0];
+						}
 						break;
 					case "Special Event":
 						if ($data_parts[2] == $data_parts[1]){
@@ -78,12 +83,32 @@ if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 	}
 	
 	foreach ($invoices as $user_id => $all_invoices){
+		$user = get_user_by( 'ID', $user_id );
+		
+		$msg = "
+<p>Please find details below of a new invoice added to your account:-</p>
+				
+<table class='table-visible' style='margin:15px;'>
+	<th>Date</th><th>Description</th><th class='text-center'>Quantity</th><th class='text-center'>Cost</th><th class='text-center'>Total</th></tr>";
 		
 		foreach ($all_invoices as $invoice){
 			addInvoice($date_in, $invoice['total_amount'], $user_id, $category, $event_desc, $description);
-		}
+			$msg .= "
+<tr><td>".$date_in."</td><td>".$description."</td><td class='text-center'>".$invoice['quantity']."</td><td class='text-center'>&pound;".number_format($invoice['price'], 2)."</td><td class='text-center'>&pound;".number_format($invoice['total_amount'], 2)."</td></tr>";
 			
-		//EMAIL.....!
+		}
+		$msg .= "
+				</table>
+				
+				<p>To view your current account status with the club please login to the club website and visit the <a href=\"https://cambridgeshire-flyball.org.uk/members-only/account/\">My Account</a> page.  From here you can see the last 2 years of your account history.</p>
+						
+<p>Any issues or queries please let me know.</p>
+						
+Many thanks,<br />
+Ellen<br />";
+			
+		//EMAIL.....!		
+		sendEmail($user->user_email, $user->first_name, 'New Invoice Added', $msg);
 	}
 	
 	wp_safe_redirect('/admin/accounts/'); exit;

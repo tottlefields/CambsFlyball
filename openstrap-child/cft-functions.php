@@ -136,6 +136,24 @@ function addInvoice($date, $amount, $user_id, $category, $event_desc=null, $desc
 }
 
 
+function sendEmail($to_email, $member_name, $msg_subject, $msg){
+	
+	$headers[] = 'Content-Type: text/html; charset=UTF-8';
+	$headers[] = 'Reply-To:captain@cambridgeshire-flyball.org.uk';
+	
+	ob_start();
+	include(get_stylesheet_directory() . '/assets/email-templates/member-email.html');
+	$email_content = ob_get_contents();
+	ob_end_clean();
+	
+	
+	$email_content = str_replace('[[MEMBER]]', $member_name, $email_content);
+	$email_content = str_replace('[[MSG]]', $msg, $email_content);	
+	
+	wp_mail($to_email, "[Cambridgeshire Flyball] ".$msg_subject, $email_content, $headers);
+}
+
+
 
 
 
