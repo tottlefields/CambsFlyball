@@ -30,14 +30,27 @@ function get_dogs_for_team($team_id){
 function get_dogs_for_user($user){
 	global $wpdb;
 	
-	$args = array(
+	$owned = get_posts(array(
 			'post_type'     => 'cft_dog',
-			'post_status'   => array('publish'),
+			'post_status'   => array('publish', 'retired'),
 			'posts_per_page'=> -1,
+			'fields'		=> 'ids',
 			'author'        =>  $user->ID
-	);
-	
-	$dogs = get_posts($args);
+	));
+	$handled = get_posts(array(
+			'post_type'     => 'cft_dog',
+			'post_status'   => array('publish', 'retired'),
+			'posts_per_page'=> -1,
+			'fields'		=> 'ids',
+			'meta_query'	=> array(array('key' => 'handler', 'value' => $user->ID, 'compare' => '='))			
+	));
+
+	$dogs = get_posts(array(
+			'post_type'     => 'cft_dog',
+			'post_status'   => array('publish', 'retired'),
+			'posts_per_page'=> -1,
+			'post__in'		=> array_unique (array_merge ($owned, $handled))
+	));	
 	
 	return $dogs;
 	
