@@ -44,6 +44,10 @@ function get_dogs_for_user($user){
 			'fields'		=> 'ids',
 			'meta_query'	=> array(array('key' => 'handler', 'value' => $user->ID, 'compare' => '='))			
 	));
+	
+	if (count($owned) + count($handled) == 0){
+		return array();
+	}
 
 	$dogs = get_posts(array(
 			'post_type'     => 'cft_dog',
