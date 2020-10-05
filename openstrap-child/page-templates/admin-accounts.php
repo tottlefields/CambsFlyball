@@ -24,54 +24,56 @@ if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 				}
 				
 				$data_parts = preg_split("/[,|\t]/", rtrim($data));
-				#$data_parts => NAME NUMBER MEMB_ID QUANTITY RATE
+				#$data_parts => NAME NUMBER MEMB_ID DESC QUANTITY RATE
 				if ($data_parts[0] == ""){ continue; }
 	
-				$description = '';
-				switch ($category) {
-					case "Flyball":
-						$description = "Training - ".$event_desc;
-						break;
-					case "Bonus Ball":
-						$description = $event_desc;
-						break;
-					case "Entry Fees":
-						$description = $event_desc." - ".$data_parts[0];
-						break;
-					case "Camping":
-						$description = $event_desc." - ".$category;
-						break;
-					case "Membership":
-						if($event_desc != ''){
+				$description = $data_parts[3];
+				if ($data_parts[3] == ''){
+					switch ($category) {
+						case "Flyball":
+							$description = "Training - ".$event_desc;
+							break;
+						case "Bonus Ball":
 							$description = $event_desc;
-						}
-						else{
-							$description = $category." - ".$data_parts[0];
-						}
-						break;
-					case "Special Event":
-						if ($data_parts[2] == $data_parts[1]){
-							$description = $event_desc;
-						}
-						else {
+							break;
+						case "Entry Fees":
 							$description = $event_desc." - ".$data_parts[0];
-						}
-						break;
-					case "Merchandise":
-						if ($data_parts[2] == $data_parts[1]){
-							$description = $event_desc;
-						}
-						else {
-							$description = $event_desc." - ".$data_parts[0];
-						}
-						break;
+							break;
+						case "Camping":
+							$description = $event_desc." - ".$category;
+							break;
+						case "Membership":
+							if($event_desc != ''){
+								$description = $event_desc;
+							}
+							else{
+								$description = $category." - ".$data_parts[0];
+							}
+							break;
+						case "Special Event":
+							if ($data_parts[2] == $data_parts[1]){
+								$description = $event_desc;
+							}
+							else {
+								$description = $event_desc." - ".$data_parts[0];
+							}
+							break;
+						case "Merchandise":
+							if ($data_parts[2] == $data_parts[1]){
+								$description = $event_desc;
+							}
+							else {
+								$description = $event_desc." - ".$data_parts[0];
+							}
+							break;
+					}
 				}
 				
 				$invoice = array(
 						"description"	=> $description,
-						"quantity"		=> $data_parts[3],
-						"price"			=> $data_parts[4],
-						"total_amount"	=> $data_parts[3] * $data_parts[4]
+						"quantity"		=> $data_parts[4],
+						"price"			=> $data_parts[5],
+						"total_amount"	=> $data_parts[4] * $data_parts[5]
 				);
 				
 				if(!isset($invoices[$data_parts[2]])){
@@ -86,15 +88,15 @@ if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 		$user = get_user_by( 'ID', $user_id );
 		
 		$msg = "
-<p>Please find details below of a new invoice added to your account:-</p>
+<p>Please find details below of a new invoice(s) added to your account:-</p>
 				
 <table class='table-visible' style='margin:15px;'>
 	<th>Date</th><th>Description</th><th class='text-center'>Quantity</th><th class='text-center'>Cost</th><th class='text-center'>Total</th></tr>";
 		
 		foreach ($all_invoices as $invoice){
-			addInvoice($date_in, $invoice['total_amount'], $user_id, $category, $event_desc, $description);
+			addInvoice($date_in, $invoice['total_amount'], $user_id, $category, $event_desc, $invoice['description']);
 			$msg .= "
-<tr><td>".$date_in."</td><td>".$description."</td><td class='text-center'>".$invoice['quantity']."</td><td class='text-center'>&pound;".number_format($invoice['price'], 2)."</td><td class='text-center'>&pound;".number_format($invoice['total_amount'], 2)."</td></tr>";
+<tr><td>".$date_in."</td><td>".$invoice['description']."</td><td class='text-center'>".$invoice['quantity']."</td><td class='text-center'>&pound;".number_format($invoice['price'], 2)."</td><td class='text-center'>&pound;".number_format($invoice['total_amount'], 2)."</td></tr>";
 			
 		}
 		$msg .= "
@@ -108,7 +110,7 @@ Many thanks,<br />
 Ellen<br />";
 			
 		//EMAIL.....!		
-		sendEmail($user->user_email, $user->first_name, 'New Invoice Added', $msg);
+		sendEmail($user->user_email, $user->first_name, 'New Invoice(s) Added', $msg);
 	}
 	
 	wp_safe_redirect('/admin/accounts/'); exit;
