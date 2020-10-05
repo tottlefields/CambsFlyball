@@ -38,7 +38,7 @@
 															
 															<div class="col-md-3">
 																<label class="btn btn-default btn-block" for="csv_file" id="upload-file-btn">
-																	<input id="csv_file" name="csv_file" type="file" style="display:none" onchange="jQuery('#upload-file-label').html(this.files[0].name);jQuery('#upload-file-btn').addClass('btn-success');">
+																	<input id="csv_file" name="csv_file" type="file" style="display:none" onchange="jQuery('#upload-file-label').html(this.files[0].name);jQuery('#upload-file-btn').addClass('btn-success');" />
 																	<span id="upload-file-label">Choose File</span>
 																</label>
 																<!-- <span class='label label-info' id="upload-file-info"></span> -->
