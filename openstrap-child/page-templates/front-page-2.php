@@ -28,8 +28,15 @@ get_header(); ?>
 		<h1><?php echo of_get_option('blurb_heading'); ?></h1>
 		<p class="lead"><?php echo of_get_option('blurb_text'); ?></p>
 		<?php if(of_get_option('display_blurb_button') == '1'): ?>	
-		<p><a class="btn btn-primary btn-sm" href="<?php echo get_permalink( of_get_option('blurb_button_link_page')); ?>"><?php echo of_get_option('blurb_button_title'); ?> &nbsp; <i class="icon-arrow-right icon-large"></i>  </a></p>
+		<p><a class="btn btn-success btn-sm" href="<?php echo get_permalink( of_get_option('blurb_button_link_page')); ?>"><?php echo of_get_option('blurb_button_title'); ?> &nbsp; <i class="icon-arrow-right icon-large"></i>  </a></p>
 		<?php endif; ?>	
+		
+	<div class="row hidden-xs hidden-sm">
+		<div class="col-md-12">
+			<div id="flickr" align="center" style="text-align:center;clear:right;"></div>
+			<?php //the_content(); ?>
+		</div>
+	</div>
 		<hr class="style-eight"/>
 	  </div>
 	</div>
@@ -37,7 +44,7 @@ get_header(); ?>
 	<!--/blurb-->
 	<?php endif; ?>	
 
-	
+	<div class="row">
 	<div class="col-md-<?php echo $divclass; ?>">
 	<?php if ( is_active_sidebar( 'openstrap_front_page_one' ) ) : ?>
 	<?php dynamic_sidebar( 'openstrap_front_page_one' ); ?>	
@@ -62,6 +69,29 @@ get_header(); ?>
 	<?php dynamic_sidebar( 'openstrap_front_page_four' ); ?>	
 	<?php endif; ?>	
 	</div>
-	<?php endif; ?>			
+	<?php endif; ?>	
+	</div>
+			
 
 <?php get_footer(); ?>
+<script>
+	jQuery(document).ready(function($) {
+        //var ajaxURL = "https://api.flickr.com/services/feeds/photos_public.gne?id=64321729@N04&set_id=72157636057346063&tags=cc176&format=json&jsoncallback=?";
+        var ajaxURL = "https://api.flickr.com/services/feeds/photos_public.gne?id=139417838@N03&format=json&jsoncallback=?";
+        $.getJSON(ajaxURL,function(data) {
+                items = data.items;
+                var selArray = new Array;
+                for(var i=0; i < 6; i++){
+                        var randomNumber = Math.floor(Math.random() * items.length);
+                        selArray.push(items[randomNumber]);
+                        items.splice(randomNumber,1);
+                }
+                $.each(selArray, function(i,photo){
+                        var photoHTML = '<span style="margin:3px;>';
+                        photoHTML += '<a href="' + photo.link + '">';
+                        photoHTML += '<img class="wp-post-image" src="' + photo.media.m.replace('_m','_q') + '"></a>';
+                        $('#flickr').append(photoHTML);
+                }); // end each
+        }); // end get JSON
+	}); // end ready
+</script>
