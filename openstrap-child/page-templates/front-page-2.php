@@ -28,7 +28,7 @@ get_header(); ?>
 		<h1><?php echo of_get_option('blurb_heading'); ?></h1>
 		<p class="lead"><?php echo of_get_option('blurb_text'); ?></p>
 		<?php if(of_get_option('display_blurb_button') == '1'): ?>	
-		<p><a class="btn btn-success btn-sm" href="<?php echo get_permalink( of_get_option('blurb_button_link_page')); ?>"><?php echo of_get_option('blurb_button_title'); ?> &nbsp; <i class="icon-arrow-right icon-large"></i>  </a></p>
+		<p><a class="btn btn-primary btn-sm" href="<?php echo get_permalink( of_get_option('blurb_button_link_page')); ?>"><?php echo of_get_option('blurb_button_title'); ?> &nbsp; <i class="icon-arrow-right icon-large"></i>  </a></p>
 		<?php endif; ?>	
 		
 	<div class="row hidden-xs hidden-sm">
