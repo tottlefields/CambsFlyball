@@ -8,6 +8,24 @@
  * @since Openstrap 0.1
  */
 
+if (isset($_REQUEST) && $_REQUEST['add_income'] != ''){
+	if ($_REQUEST['method'] == 'INVOICE'){
+		$invoice = array(
+				"date"			=> $_REQUEST['date_in'],
+				"category"		=> 'Flyball',
+				"event_desc"	=> $_REQUEST['description'],
+				"description"	=> $_REQUEST['description'],
+				"quantity"		=> 1,
+				"price"			=> $_REQUEST['amount'],
+				"total_amount"	=> $_REQUEST['amount']
+		);
+		emailInvoice($_REQUEST['user_id'], array($invoice));
+	} else {
+		addPayment($_REQUEST['date_in'], $_REQUEST['amount'], $_REQUEST['user_id'], $_REQUEST['method'], $_REQUEST['description']);
+	}
+	wp_safe_redirect($_SERVER['HTTP_REFERER']); exit;
+}
+
 if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 	
 	$event_desc = $_REQUEST['event_desc'];
@@ -70,6 +88,9 @@ if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 				}
 				
 				$invoice = array(
+						"date"			=> $date_in,
+						"category"		=> $category,
+						"event_desc"	=> $event_desc,
 						"description"	=> $description,
 						"quantity"		=> $data_parts[4],
 						"price"			=> $data_parts[5],
@@ -84,36 +105,11 @@ if (isset($_REQUEST) && $_REQUEST['add_invoices'] != ''){
 		}
 	}
 	
-	foreach ($invoices as $user_id => $all_invoices){
-		$user = get_user_by( 'ID', $user_id );
-		
-		$msg = "
-<p>Please find details below of a new invoice(s) added to your account:-</p>
-				
-<table class='table-visible' style='margin:15px;'>
-	<th>Date</th><th>Description</th><th class='text-center'>Quantity</th><th class='text-center'>Cost</th><th class='text-center'>Total</th></tr>";
-		
-		foreach ($all_invoices as $invoice){
-			addInvoice($date_in, $invoice['total_amount'], $user_id, $category, $event_desc, $invoice['description']);
-			$msg .= "
-<tr><td>".$date_in."</td><td>".$invoice['description']."</td><td class='text-center'>".$invoice['quantity']."</td><td class='text-center'>&pound;".number_format($invoice['price'], 2)."</td><td class='text-center'>&pound;".number_format($invoice['total_amount'], 2)."</td></tr>";
-			
-		}
-		$msg .= "
-				</table>
-				
-				<p>To view your current account status with the club please login to the club website and visit the <a href=\"https://cambridgeshire-flyball.org.uk/members-only/account/\">My Account</a> page.  From here you can see the last 2 years of your account history.</p>
-						
-<p>Any issues or queries please let me know.</p>
-						
-Many thanks,<br />
-Ellen<br />";
-			
-		//EMAIL.....!		
-		sendEmail($user->user_email, $user->first_name, 'New Invoice(s) Added', $msg);
+	foreach ($invoices as $user_id => $all_invoices){		
+		emailInvoice($user_id, $all_invoices);
 	}
 	
-	wp_safe_redirect('/admin/accounts/'); exit;
+	wp_safe_redirect($_SERVER['HTTP_REFERER']); exit;
 }
 
 
@@ -134,66 +130,8 @@ get_header(); ?>
 	        <div class="entry-content">
 	                <?php the_content(); ?>
 	                
-	                <?php //$users = get_users( [ 'role__in' => [ 'contributor', 'editor' ] ] ); //debug_array($users); ?>
-	                
-	                <div class="row">
-	                	<div class="col-md-12 hidden-xs hidden-sm">
-	                		<div class="panel-group" role="tablist">
-	                			<div class="panel panel-default">
-	                				<div class="panel-heading" role="tab" id="collapseInvoicingHeading">
-	                					<h4 class="panel-title">
-	                						<a href="#collapseInvoicing" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseInvoicing">Bulk Invoicing</a>
-	                					</h4>
-	                				</div>
-									<div id="collapseInvoicing" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseInvoicingHeading">
-										<div class="panel-body">
-											<div class="row">
-												<div class="col-xs-12">
-													<form class="form-horizontal" role="form" autocomplete="off" method="post" enctype="multipart/form-data">
-														<div class="form-group">
-															<label for="date_in" class="sr-only">Date</label>
-															<div class="input-group col-md-2 date">
-																<span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
-																<input type="text" id="date_in" name="date_in" class="form-control" placeholder="Date" />
-															</div>														
-															<label for="category" class="sr-only">Category</label>
-															<div class="col-md-3">
-																<select class="form-control" id="category" name="category" title="Category">
-																	<option value="" hidden>Category</option>
-																	<option value="Flyball">Training Fees</option>
-																	<option value="Entry Fees">Entry Fees</option>
-																	<option value="Camping">Camping Fees</option>
-																	<option value="Special Event">Special Event</option>
-																	<option value="Bonus Ball">Bonus Ball</option>
-																	<option value="Membership">Membership</option>
-																	<option value="Mercahndise">Merchandise</option>
-																</select>
-															</div>
-															<label for="event_desc" class="sr-only">Event</label>
-															<div class="col-md-3">
-																<input type="text" id="event_desc" name="event_desc" class="form-control" placeholder="Event/Description" />
-															</div>
-															
-															<div class="col-md-3">
-																<label class="btn btn-default btn-block" for="csv_file" id="upload-file-btn">
-																	<input id="csv_file" name="csv_file" type="file" style="display:none" onchange="jQuery('#upload-file-label').html(this.files[0].name);jQuery('#upload-file-btn').addClass('btn-success');">
-																	<span id="upload-file-label">Choose File</span>
-																</label>
-																<!-- <span class='label label-info' id="upload-file-info"></span> -->
-															</div>
-															<div class="col-md-1">
-																<button type="submit" class="btn btn-block btn-primary" id="add_invoices" name="add_invoices" value="yes">Go!</button>
-															</div>
-														</div>
-													</form>
-												</div>
-											</div>
-										</div>
-									</div>
-	                			</div>
-	                		</div>			
-						</div>	                
-	                </div>
+					<?php get_template_part('part-templates/accounts', 'individual'); ?>	 
+					<?php get_template_part('part-templates/accounts', 'bulk'); ?>
 	                
 	                <?php $transactions = getRecentAccounts(); ?>
 	                
@@ -223,7 +161,7 @@ get_header(); ?>
 <?php get_footer(); ?>
 <script>
 	jQuery(document).ready(function($) {
-		$("#date_in").datepicker({
+		$(".date_in").datepicker({
 			format : 'dd/mm/yyyy',
 			autoclose : true,
 			todayHighlight : true,
