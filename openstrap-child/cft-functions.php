@@ -170,6 +170,37 @@ function sendEmail($to_email, $member_name, $msg_subject, $msg){
 	wp_mail($to_email, "[Cambridgeshire Flyball] ".$msg_subject, $email_content, $headers);
 }
 
+function emailInvoice($user_id, $invoices){
+	global $wpdb;
+	
+	$user = get_user_by( 'ID', $user_id );
+
+	$msg = "
+<p>Please find details below of a new invoice(s) added to your account:-</p>
+		
+<table class='table-visible' style='margin:15px;'>
+	<th>Date</th><th>Description</th><th class='text-center'>Quantity</th><th class='text-center'>Cost</th><th class='text-center'>Total</th></tr>";
+
+	foreach ($invoices as $invoice){
+		addInvoice($invoice['date'], $invoice['total_amount'], $user_id, $invoice['category'], $invoice['event_desc'], $invoice['description']);
+		$msg .= "
+	<tr><td>".$invoice['date']."</td><td>".$invoice['description']."</td><td class='text-center'>".$invoice['quantity']."</td><td class='text-center'>&pound;".number_format($invoice['price'], 2)."</td><td class='text-center'>&pound;".number_format($invoice['total_amount'], 2)."</td></tr>";
+		
+	}
+	$msg .= "
+				</table>
+		
+				<p>To view your current account status with the club please login to the club website and visit the <a href=\"https://cambridgeshire-flyball.org.uk/members-only/account/\">My Account</a> page.  From here you can see the last 2 years of your account history.</p>
+		
+<p>Any issues or queries please let me know.</p>
+		
+Many thanks,<br />
+Ellen<br />";
+
+	//EMAIL.....!
+	sendEmail($user->user_email, $user->first_name, 'New Invoice(s) Added', $msg);
+}
+
 
 
 
