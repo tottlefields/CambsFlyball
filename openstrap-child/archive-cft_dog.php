@@ -53,7 +53,10 @@ get_header(); ?>
 			while ( have_posts() ) : the_post();
 			
 				if (get_field('retired') && get_field('retired') == 1){
-					array_push($retired_dogs, $post);
+//					array_push($retired_dogs, $post);
+					$retired_date = get_field('date_retired', get_the_ID(), false);
+					if (!isset($retired_dogs[$retired_date])){ $retired_dogs[$retired_date] = array(); }
+					array_push($retired_dogs[$retired_date], $post);
 					continue;
 				}
 
@@ -80,16 +83,20 @@ get_header(); ?>
 			
 			
 			<div class="row">
-			<?php 
-			while (list($i, $post) = each($retired_dogs)) :
-    			setup_postdata($post); ?>
+			<?php
+			krsort($retired_dogs);
+			foreach ($retired_dogs as $date => $dogs){
+				while (list($i, $post) = each($dogs)) :
+    					setup_postdata($post); ?>
 				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 					<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
 				</div>
 			
-			<?php endwhile;
-			// don't forget to restore the main queried object after the loop!
-			wp_reset_postdata();?>
+				<?php endwhile;
+				// don't forget to restore the main queried object after the loop!
+				wp_reset_postdata();
+			}
+			?>
 			
 			<?php endif; ?>
 			</div><!-- row -->

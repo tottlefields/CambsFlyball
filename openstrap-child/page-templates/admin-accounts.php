@@ -143,7 +143,11 @@ get_header(); ?>
 								<td><?php echo $row->method; ?></td>
 								<td class="hidden-xs"><?php echo $row->category; ?></td>
 								<td>
-								<?php if ($row->count == 1) { echo '<a href="/members-only/account/?cft-member='.$row->users.'">'.$row->description.'</a>'; } else { echo $row->description; } ?>
+								<?php if ($row->count == 1) {
+	$name = get_user_by( 'login', $row->users )->display_name;
+	echo '<a href="/members-only/account/?cft-member='.$row->users.'">'.$name.'</a>';
+	if ($row->method == 'INVOICE'){ echo '<small class="visible-md-inline visible-lg-inline"><em> ('.$row->description.')</emi></small>'; }
+} else { echo $row->description; } ?>
 								</td>
 								<td class="text-right">&pound;<?php echo number_format($row->total, 2); ?></td>
 							</tr>
@@ -163,6 +167,7 @@ get_header(); ?>
 	jQuery(document).ready(function($) {
 		$(".date_in").datepicker({
 			format : 'dd/mm/yyyy',
+			weekStart: 1,
 			autoclose : true,
 			todayHighlight : true,
 			todayBtn : true,

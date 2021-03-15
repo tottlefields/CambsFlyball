@@ -59,6 +59,7 @@ get_header(); ?>
 	jQuery(document).ready(function($) {
 		$(".date_in").datepicker({
 			format : 'dd/mm/yyyy',
+			weekStart: 1,
 			autoclose : true,
 			todayHighlight : true,
 			todayBtn : true,

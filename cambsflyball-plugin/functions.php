@@ -43,6 +43,9 @@ function my_acf_save_post( $post_id ) {
 				'post_status'   => 'retired'
 		);
 		wp_update_post( $my_post );
+		update_field( 'team_name', '', $post_id );
+		update_field( 'team', '', $post_id );
+		return;
 	};
 	
 	// Check the new value of a specific field.
