@@ -44,7 +44,6 @@ get_header(); ?>
 	<!--/blurb-->
 	<?php endif; ?>	
 
-	<div class="row">
 	<div class="col-md-<?php echo $divclass; ?>">
 	<?php if ( is_active_sidebar( 'openstrap_front_page_one' ) ) : ?>
 	<?php dynamic_sidebar( 'openstrap_front_page_one' ); ?>	
@@ -81,13 +80,14 @@ get_header(); ?>
         $.getJSON(ajaxURL,function(data) {
                 items = data.items;
                 var selArray = new Array;
-                for(var i=0; i < 6; i++){
+                for(var i=0; i < 7; i++){
                         var randomNumber = Math.floor(Math.random() * items.length);
                         selArray.push(items[randomNumber]);
                         items.splice(randomNumber,1);
                 }
                 $.each(selArray, function(i,photo){
-                        var photoHTML = '<span style="margin:3px;>';
+                        var photoHTML = '<span style="margin:3px;">';
+			if (i>4) { photoHTML = '<span style="margin:3px;" class="hidden-md">'; }
                         photoHTML += '<a href="' + photo.link + '">';
                         photoHTML += '<img class="wp-post-image" src="' + photo.media.m.replace('_m','_q') + '"></a>';
                         $('#flickr').append(photoHTML);

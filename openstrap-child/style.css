@@ -1,7 +1,7 @@
 /*
 Theme Name: Cambridgeshire Flyball (Openstrap)
 Theme URI:
-Version: 1.0.0
+Version: 1.0.1
 Template: openstrap
 */
 
@@ -33,10 +33,13 @@ Template: openstrap
 	color: #cccccc;
 }
 .navbar { min-height:40px; }
-
+.navbar-collapse.in {
+	overflow-y: auto;
+}
 
 #header-top a:hover, #header-top a:focus { text-decoration: none; color: #ae9f9f; }
 a, a:hover, a:focus { color: #a12525; }
+.popular-posts ul li:before, .widget_categories ul li:before, .widget_recent_entries ul li:before { color: #a12525; }
 
 p {
     font-size: 14px;
