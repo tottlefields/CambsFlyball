@@ -27,7 +27,7 @@ $comps = get_posts(array(
 
 <!-- Main Content -->	
 <div class="col-md-12" role="main">
-	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<article id="page-<?php the_ID(); ?>" <?php post_class(); ?>>
     <header class="entry-header">
       <h1 class="entry-title"><?php echo $page_title; ?></h1>
     </header>
@@ -39,18 +39,28 @@ foreach($comps as $comp) : setup_postdata($comp);
   $dates = $start_date->format('jS M');
   if (isset($end_date) && $end_date != '' && $start_date != $end_date){ $dates .= ' to '.$end_date->format('jS M'); }
 ?>
-    <hgroup>
-			<h3>
-      <a href="<?php echo get_post_permalink($comp->ID) ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php echo $comp->post_title; ?></a>
-      <div class="pull-right hidden-xs">
-        <small class="visible-sm"><?php echo $start_date->format('jS M'); ?></small>
-        <small class="hidden-sm"><?php echo $dates; ?></small>
-      </div>
-      </h3>
-			<hr class="post-meta-hr">
-		</hgroup>
 
-<?php endforeach;?>      
+    <article id="post-<?php echo $comp->ID; ?>" <?php post_class('', $comp->ID); ?>>
+	    <header>
+        <hgroup>
+          <h3>
+          <a href="<?php echo get_post_permalink($comp->ID) ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php echo $comp->post_title; ?></a>
+          <div class="pull-right hidden-xs">
+            <small class="visible-sm"><?php echo $start_date->format('jS M'); ?></small>
+            <small class="hidden-sm"><?php echo $dates; ?></small>
+          </div>
+          </h3>
+          <hr class="post-meta-hr">
+        </hgroup>
+      </header>
+    
+  <?php if ( has_post_thumbnail($comp->ID)) : ?>
+		  <div class="featured-img pull-left"><?php echo get_the_post_thumbnail($comp->ID, 'thumbnail'); ?></div>
+	<?php endif; ?>
+	<div class="clearfix"/>
+</article>
+
+<?php endforeach;?>  
   </article><!-- #post -->
 </div>	
 <!-- End Main Content -->	
