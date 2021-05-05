@@ -5,6 +5,7 @@ add_action( 'wp_enqueue_scripts', 'enqueue_parent_styles', 100 );
 add_action( 'wp_enqueue_scripts', 'cft_enqueue_scripts', 200 );
 add_action('pre_get_posts', 'sort_teams_correctly');
 add_filter('query_vars', 'add_query_vars');
+add_filter('rewrite_rules_array', 'add_rewrite_rules');				// hook add_rewrite_rules function into rewrite_rules_array
 
 function enqueue_parent_styles() {
 	wp_dequeue_style( 'openstrap-style' );
@@ -25,16 +26,22 @@ function cft_enqueue_scripts() {
 }
 
 function add_query_vars($aVars) {
-	$aVars[] = "cft-member"; // represents the country as shown in the URL
-	//$aVars[] = "ukfl-action"; // represents the country as shown in the URL
+	$aVars[] = "cft-member"; // represents the member as shown in the URL
+	$aVars[] = "cft-year"; // represents the year as shown in the URL
 	return $aVars;
 }
 
-/*
-* Define a constant path to our single template folder
-*/
-define(SINGLE_PATH, STYLESHEETPATH . '/single');
- 
+function add_rewrite_rules($aRules) {
+	$aNewRules = array(
+		'results/([^/]+)/?$' => 'index.php?pagename=results&cft-year=$matches[1]',
+	);
+	$aRules = $aNewRules + $aRules;
+	return $aRules;
+}
+
+
+
+
 /**
 * Filter the single_template with our custom function
 */
@@ -45,25 +52,48 @@ add_filter('single_template', 'my_single_template');
 */
 function my_single_template($single) {
 	global $wp_query, $post;
- 
+
+	// Get the current single post object
+	$post = get_queried_object();
+	// Set our 'constant' folder path
+	$path = 'single/';
+
+	// Set our variable to hold our templates
+	$templates = array();
+
+	// Lets handle the custom post type section
+	if ( 'post' !== $post->post_type ) {
+			$templates[] = $path . 'single-' . $post->post_type . '-' . $post->post_name . '.php';
+			$templates[] = $path . 'single-' . $post->post_type . '.php';
+	}
+
+	// Lets handle the post post type stuff
+	if ( 'post' === $post->post_type ) {
+			// Get the post categories
+			$categories = get_the_category( $post->ID );
+			// Just for incase, check if we have categories
+			if ( $categories ) {
+					foreach ( $categories as $category ) {
+							// Create possible template names
+							$templates[] = $path . 'single-cat-' . $category->slug . '.php';
+							$templates[] = $path . 'single-cat-' . $category->term_id . '.php';
+					} //endforeach
+			} //endif $categories
+	} // endif  
+
+	// Set our fallback templates
+	$templates[] = $path . 'single.php';
+	$templates[] = $path . 'default.php';
+	$templates[] = 'index.php';
+
 	/**
-	* Checks for single template by category
-	* Check by category slug and ID
-	*/
-	foreach((array)get_the_category() as $cat) :
+	 * Now we can search for our templates and load the first one we find
+	 * We will use the array ability of locate_template here
+	 */
+	$template = locate_template( $templates );
 
-		if(file_exists(SINGLE_PATH . '/single-cat-' . $cat->slug . '.php'))
-		return SINGLE_PATH . '/single-cat-' . $cat->slug . '.php';
-	 
-		elseif(file_exists(SINGLE_PATH . '/single-cat-' . $cat->term_id . '.php'))
-		return SINGLE_PATH . '/single-cat-' . $cat->term_id . '.php';
-
-	endforeach;
-
-	if (file_exists(SINGLE_PATH.'/single-'.$post->post_type.'.php'))
-                return SINGLE_PATH.'/single-'.$post->post_type.'.php';	
-
-	return SINGLE_PATH . '/single.php'; 
+	// Return the template rteurned by locate_template
+	return $template;
 }
 
 function sort_teams_correctly( $query ) {
