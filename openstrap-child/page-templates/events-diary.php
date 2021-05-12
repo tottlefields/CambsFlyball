@@ -106,7 +106,7 @@ get_header();
 			<div class="entry-content">
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="table-responsive">
+						<div class="table-responsive" style="font-size:0.9em">
 							<table class="table table-hover table-bordered">
 								<thead>
 									<tr>
@@ -158,9 +158,9 @@ get_header();
 											$ageOK = ($age > 0) ? 1 : 0;
 										}
 										if ($ageOK){
-											echo '<td>&nbsp;</td>';
+											echo '<td class="text-center">&nbsp;</td>';
 										} else {
-											echo '<td class="active">&nbsp;</td>';
+											echo '<td class="active text-center"><i class="fa fa-times" aria-hidden="true"></i></td>';
 										}
 									}
 								}
