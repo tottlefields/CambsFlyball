@@ -21,7 +21,7 @@ $today = new DateTime('now', $tz);
 
 $comps = get_posts(array(
   'post_status'     => array('future'),
-  'posts_per_page'  => 8,
+  'posts_per_page'  => 10,
   'category'        => 16,
   'order'           => 'ASC',
   'meta_key'        => 'start_date',
