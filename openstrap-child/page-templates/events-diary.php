@@ -15,6 +15,7 @@ if (!is_user_logged_in()) { wp_safe_redirect('/login/'); exit; }
 $page_title = get_the_title();
 
 $user = $current_user;
+$tz  = new DateTimeZone('Europe/London');
 /*$username = urldecode($wp_query->query_vars['cft-member']);
 if (isset($username) && $username != ''){
 	if (current_user_can('administrator') || current_user_can('editor')){
@@ -26,6 +27,41 @@ if (isset($username) && $username != ''){
 	}
 } */
 
+$comps = get_posts(array(
+  'post_status'     => array('future'),
+  'posts_per_page'  => 8,
+  'category'        => 16,
+  'order'           => 'ASC',
+  'meta_key'        => 'start_date',
+  'orderby'         => 'meta_value_num',
+  'meta_query'      => array(
+    array('key' => 'start_date', 'value' => date('Ymd'), 'compare' => '>=')
+  )
+));
+
+
+$myDogs = get_posts(array(
+  'post_status'     => array('publish'),
+	'post_type'				=> 'cft_dog',
+	'posts_per_page'	=> -1,
+	'orderby'					=> 'title',
+  'order'						=> 'ASC',
+	'author'					=> $current_user->ID
+));
+
+$otherDogs = get_posts(array(
+  'post_status'     => array('publish'),
+	'post_type'				=> 'cft_dog',
+	'posts_per_page'	=> -1,
+	'orderby'					=> 'title',
+  'order'						=> 'ASC',
+	'author__not_in'	=> array($current_user->ID)
+));
+
+$dogs = array_merge($myDogs, $otherDogs);
+
+//debug_array($dogs);
+
 get_header();
 
 ?>
@@ -33,23 +69,83 @@ get_header();
 	<!-- Main Content -->	
 	<div class="col-md-12" role="main">
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	        <header class="entry-header">
-	                <h1 class="entry-title"><?php echo $page_title; ?></h1>
-	        </header>
-	
-	        <div class="entry-content">
-	        	<div class="row"><div class="col-xs-12">
-	        <?php   
-		        	$money = get_members_money($user);
-		        	if ($money['balance'] > 0) {
-		        		echo '<div class="alert alert-danger" role="alert">You currently owe <span class="text-danger"><strong>&pound;'.number_format($money['balance'], 2).'</strong></span> to Cambridgeshire Flyball.</div>';
-		        	} else {
-		        		echo '<div class="alert alert-success" role="alert">You are currently <span class="text-success"><strong>&pound;'.number_format(-1*$money['balance'], 2).'</strong></span> in credit with Cambridgeshire Flyball.</div>';
-	        		}
-	        	?>
-			</div></div>
+	    <header class="entry-header">
+				<h1 class="entry-title"><?php echo $page_title; ?></h1>
+			</header>
 			
-			<div class="row">
+			<div class="entry-content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="table-responsive">
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<td rowspan="2">&nbsp;</td>
+					<?php
+					$dates = array();
+					foreach($comps as $comp) : setup_postdata($comp); 
+						$start_date = DateTime::createFromFormat('Ymd', get_post_meta( $comp->ID, 'start_date', true ), $tz);
+						$end_date   = DateTime::createFromFormat('Ymd', get_post_meta( $comp->ID, 'end_date', true ), $tz);
+						//$dates = $start_date->format('jS M');
+						$compDates = array();
+						if (isset($end_date) && $end_date != ''){ //} && $start_date != $end_date){ 
+							//$dates .= ' to '.$end_date->format('jS M'); 
+							for($d = $start_date; $d <= $end_date; $d->modify('+1 day')){
+								array_push($compDates, $d->format('Ymd'));
+							}
+						}
+						array_push($dates, $compDates);
+						//debug_array($dates);
+					?>
+										<th class="text-center" colspan="<?php echo count($compDates); ?>"><?php echo $comp->post_title; ?></th>
+						<?php endforeach;?>
+									</tr>
+									<tr>
+						<?php 
+						$colspan = 0;
+						foreach ($dates as $array){
+							foreach ($array as $date){
+								$colspan++;
+								echo '<th class="text-center">'.DateTime::createFromFormat('Ymd', $date)->format('jS M').'</th>';
+							}
+						} ?>
+									</tr>
+						<?php foreach ($dogs as $dog){
+								$dob = DateTime::createFromFormat('Ymd', get_post_meta( $dog->ID, 'date_of_birth', true ), $tz);
+								$age = $dob->diff(new DateTime('now', $tz))->y;
+								$ageOK = ($age > 0) ? 1 : 0;
+
+								if ($dog->post_author == $current_user->ID){
+									echo '<tr><td class="danger"><strong>'.$dog->post_title.'</strong></td>';
+								}else{
+									echo '<tr><td>'.$dog->post_title.'</td>';
+								}
+								foreach ($dates as $array){
+									foreach ($array as $date){
+										if (!$ageOK){
+											$age = $dob->diff(DateTime::createFromFormat('Ymd', $date))->y;
+											$ageOK = ($age > 0) ? 1 : 0;
+										}
+										if ($ageOK){
+											echo '<td>&nbsp;</td>';
+										} else {
+											echo '<td class="active">&nbsp;</td>';
+										}
+									}
+								}
+								echo '</tr>';
+						} ?>
+
+								</thead>
+							</table>
+						</div>		
+					</div>
+				</div>
+
+
+			<?php debug_array($comps); ?>
+			
+			<!--div class="row">
 				<div class="col-md-8">
 					<div class="panel panel-default">
 						<div class="panel-heading"><h3 class="panel-title">Money</h3></div>
@@ -139,12 +235,11 @@ get_header();
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> -->
 	                
 	        </div><!-- .entry-content -->
 		</article><!-- #post -->
 	
-	<?php openstrap_custom_pagination(); ?>
 	</div>	
 	<!-- End Main Content -->	
 
