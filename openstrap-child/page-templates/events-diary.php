@@ -17,7 +17,6 @@ $page_title = get_the_title();
 //$user = $current_user;
 $tz  = new DateTimeZone('Europe/London');
 $today = new DateTime('now', $tz);
-$today = DateTime::createFromFormat('Ymd', '20210529', $tz);
 
 
 $comps = get_posts(array(
