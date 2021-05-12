@@ -169,8 +169,8 @@ get_header();
 											$ageOK = ($age > 0) ? 1 : 0;
 										}
 										if ($ageOK){
+											$status = (isset($diary_details[$compID][$date][$dog->ID])) ? $diary_details[$compID][$date][$dog->ID] : '?';
 											if ($editable){
-												$status = (isset($diary_details[$compID][$date][$dog->ID])) ? $diary_details[$compID][$date][$dog->ID] : '?';
 												echo '<td data-dog="'.$dog->ID.'" data-event="'.$compID.'" data-date="'.$date.'" data-status="'.$status.'" class="text-center diary-click';
 												if ($status == "Y"){
 													echo ' success text-success"><i class="fa fa-check" aria-hidden="true"></i>';
@@ -183,7 +183,17 @@ get_header();
 												}
 												echo '</td>';
 											} else {
-												echo '<td class="text-center diary-noclick">&nbsp;</td>';
+												echo '<td class="text-center diary-noclick';
+												if ($status == "Y"){
+													echo ' success text-success"><i class="fa fa-check" aria-hidden="true"></i>';
+												}
+												else if ($status == "N"){
+													echo ' danger text-danger"><i class="fa fa-times" aria-hidden="true"></i>';
+												}
+												else if ($status == "?" || $status == "" || !isset($status)){
+													echo '">&nbsp;';
+												}												
+												echo '</td>';
 											}
 										} else {
 											echo '<td class="active text-center diary-noclick"><i class="fa fa-times" aria-hidden="true"></i></td>';
