@@ -141,7 +141,7 @@ get_header();
 						foreach ($dates as $compID => $array){
 							foreach ($array as $date){
 								$colspan++;
-								echo '<th class="text-center">'.DateTime::createFromFormat('Ymd', $date)->format('jS M').'</th>';
+								echo '<th class="text-center" width="5%">'.DateTime::createFromFormat('Ymd', $date)->format('jS M').'</th>';
 							}
 						} ?>
 									</tr>
