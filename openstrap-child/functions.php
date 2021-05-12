@@ -1,5 +1,6 @@
 <?php
 require 'cft-functions.php';
+require_once 'ajax.php';
 
 add_action( 'wp_enqueue_scripts', 'enqueue_parent_styles', 100 );
 add_action( 'wp_enqueue_scripts', 'cft_enqueue_scripts', 200 );
@@ -23,6 +24,10 @@ function cft_enqueue_scripts() {
 	// BS DatePicker
 	wp_register_script ( 'datepicker', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', array ('jquery-core', 'bootstrap'), '1.9.0', true );
 	wp_enqueue_script ( 'datepicker' );
+
+	// Main functions js file
+	wp_register_script ( 'js-functions', get_stylesheet_directory_uri().'/assets/js/functions.js', array ('jquery'), '0.1.1', true );
+	wp_enqueue_script ( 'js-functions' );
 }
 
 function add_query_vars($aVars) {

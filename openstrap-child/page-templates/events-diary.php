@@ -16,16 +16,8 @@ $page_title = get_the_title();
 
 //$user = $current_user;
 $tz  = new DateTimeZone('Europe/London');
-/*$username = urldecode($wp_query->query_vars['cft-member']);
-if (isset($username) && $username != ''){
-	if (current_user_can('administrator') || current_user_can('editor')){
-		$user = get_user_by( 'login', $username );
-		$page_title = 'Account for '.$user->display_name;
-	}
-	else {
-		wp_safe_redirect('/members-only/account/'); exit;
-	}
-} */
+$today = new DateTime('now', $tz);
+$today = DateTime::createFromFormat('Ymd', '20210529', $tz);
 
 
 $comps = get_posts(array(
@@ -90,6 +82,15 @@ if (isset($group) && $group != ''){
 
 $dogs = array_merge($myDogs, $otherDogs);
 
+$diary_details = array();
+$diary_records = $wpdb->get_results("select dog_id, event_id, event_date, status from cft_events_diary where event_date >=date(NOW())");
+foreach ($diary_records as $record){
+	if (!isset($diary_details[$record->event_id])){ $diary_details[$record->event_id] = array(); }
+	if (!isset($diary_details[$record->event_id][$record->event_date])){ $diary_details[$record->event_id][$record->event_date] = array(); }
+	if (!isset($diary_details[$record->event_id][$record->event_date][$record->dog_id])){ $diary_details[$record->event_id][$record->event_date][$record->dog_id]= $record->status; }
+}
+//debug_array($diary_details);
+
 //debug_array($dogs);
 
 get_header();
@@ -104,6 +105,10 @@ get_header();
 			</header>
 			
 			<div class="entry-content">
+				<div class="row">
+					<div class="col-xs-12"><?php the_content(); ?></div>
+				</div>
+
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="table-responsive" style="font-size:0.9em">
@@ -124,7 +129,8 @@ get_header();
 								array_push($compDates, $d->format('Ymd'));
 							}
 						}
-						array_push($dates, $compDates);
+						$dates[$comp->ID] = $compDates;
+						//array_push($dates, $compDates);
 						//debug_array($dates);
 					?>
 										<th class="text-center" colspan="<?php echo count($compDates); ?>"><?php echo $comp->post_title; ?></th>
@@ -133,7 +139,7 @@ get_header();
 									<tr>
 						<?php 
 						$colspan = 0;
-						foreach ($dates as $array){
+						foreach ($dates as $compID => $array){
 							foreach ($array as $date){
 								$colspan++;
 								echo '<th class="text-center">'.DateTime::createFromFormat('Ymd', $date)->format('jS M').'</th>';
@@ -151,16 +157,37 @@ get_header();
 								}else{
 									echo '<tr><td>'.$dog->post_title.'</td>';
 								}
-								foreach ($dates as $array){
+								foreach ($dates as $compID => $array){
+									$editable = 0;
+									if (in_array($dog, $myDogs)){
+										$editable = ($today->diff(DateTime::createFromFormat('Ymd', $array[0]))->format('%r%a') > 70) ? 1 : 0;
+									}
+									if (current_user_can('administrator')){ $editable = 1; }
+									
 									foreach ($array as $date){
 										if (!$ageOK){
 											$age = $dob->diff(DateTime::createFromFormat('Ymd', $date))->y;
 											$ageOK = ($age > 0) ? 1 : 0;
 										}
 										if ($ageOK){
-											echo '<td class="text-center">&nbsp;</td>';
+											if ($editable){
+												$status = (isset($diary_details[$compID][$date][$dog->ID])) ? $diary_details[$compID][$date][$dog->ID] : '?';
+												echo '<td data-dog="'.$dog->ID.'" data-event="'.$compID.'" data-date="'.$date.'" data-status="'.$status.'" class="text-center diary-click';
+												if ($status == "Y"){
+													echo ' success text-success"><i class="fa fa-check" aria-hidden="true"></i>';
+												}
+												else if ($status == "N"){
+													echo ' danger text-danger"><i class="fa fa-times" aria-hidden="true"></i>';
+												}
+												else if ($status == "?" || $status == "" || !isset($status)){
+													echo '">&nbsp;';
+												}
+												echo '</td>';
+											} else {
+												echo '<td class="text-center diary-noclick">&nbsp;</td>';
+											}
 										} else {
-											echo '<td class="active text-center"><i class="fa fa-times" aria-hidden="true"></i></td>';
+											echo '<td class="active text-center diary-noclick"><i class="fa fa-times" aria-hidden="true"></i></td>';
 										}
 									}
 								}
@@ -175,98 +202,6 @@ get_header();
 
 
 			<?php //debug_array($comps); ?>
-			
-			<!--div class="row">
-				<div class="col-md-8">
-					<div class="panel panel-default">
-						<div class="panel-heading"><h3 class="panel-title">Money</h3></div>
-						<div class="panel-body" style="font-size: 0.8em">
-							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-							<?php for ($y = date('Y')-1; $y<= date('Y'); $y++) {?>
-								<div class="panel panel-danger">
-									<div class="panel-heading" role="tab" id="heading<?php echo $y; ?>">
-										<h4 class="panel-title">
-											<a<?php if (date('Y') != $y) { echo ' class="collapsed"'; }?> role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $y; ?>" aria-expanded="true" aria-controls="collapse<?php echo $y; ?>"><?php echo $y; ?></a>
-										</h4>
-									</div>
-									<div id="collapse<?php echo $y; ?>" class="panel-collapse collapse<?php if (date('Y') == $y) { echo ' in'; }?>" role="tabpanel" aria-labelledby="heading<?php echo $y; ?>">
-										<?php $balance = getBalanceByDate($y.'-01-01', $user); $transactions = getUserTransYear($y, $user);  $running_total = $balance;?>
-										<table class="table table-condensed">
-											<tr>
-												<td>01-Jan</td>
-												<td class="visible-xs">&nbsp;</td>
-												<td colspan="2" class="hidden-xs text-muted"><em>Balance Carried Forward</em></td>
-												<td>&nbsp;</td>
-												<td class="text-right">
-											<?php if ($balance < 0){
-												echo '<span class="text-danger">-&pound;'.number_format(-1*$balance, 2).'</span>';
-											} else{
-												echo '<span class="text-success">&pound;'.number_format($balance, 2).'</span>';
-											} ?>
-											</td></tr>
-											<?php foreach ($transactions as $row){ 
-												$amount = '&pound;'.number_format($row->amount, 2);
-												if ($row->method == 'INVOICE'){
-													$running_total -= number_format($row->amount, 2);
-													$amount = '-&pound;'.number_format($row->amount, 2);
-												} else {
-													$running_total += number_format($row->amount, 2);
-												}
-												
-												if ($running_total < 0){
-													$r_total = '<span class="text-danger">-&pound;'.number_format(-1*$running_total, 2).'</span>';
-												} else {
-													$r_total = '<span class="text-success">&pound;'.number_format($running_total, 2).'</span>';
-												}
-												
-												?>
-											<tr>
-												<td style="white-space:nowrap;"><?php echo SQLToDate($row->date_in, 'd-M'); ?></td>
-												<td><?php echo $row->method; ?></td>
-                       							<td class="hidden-xs"><?php echo $row->description; ?></td>
-												<td class="text-right"><?php echo $amount; ?></td>
-												<td class="text-right"><?php echo $r_total; ?></td>
-											</tr>
-											<?php } ?>
-										</table>
-									</div>
-								</div>
-							<?php } ?>
-							</div>
-						</div>
-					</div>				
-				</div>
-				<div class="col-md-4">
-					<div class="panel panel-default">
-						<div class="panel-heading"><h3 class="panel-title">Dogs</h3></div>
-						<div class="panel-body">
-							<div class="row">
-							<?php $dogs = get_dogs_for_user($user); ?>						
-							<?php 
-							while (list($i, $post) = each($dogs)) :
-				    			setup_postdata($post); ?>
-								<div class="col-xs-6 col-sm-3 col-md-6">
-									<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
-								</div>
-							
-							<?php endwhile; wp_reset_postdata(); ?>
-							</div>
-						</div>
-					</div>				
-				</div>
-			</div>
-			
-			<div class="row">				
-				<div class="col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-heading"><h3 class="panel-title">Competitions</h3></div>
-						<div class="panel-body">
-
-
-						</div>
-					</div>
-				</div>
-			</div> -->
 	                
 	        </div><!-- .entry-content -->
 		</article><!-- #post -->
