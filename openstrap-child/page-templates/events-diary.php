@@ -14,7 +14,7 @@ if (!is_user_logged_in()) { wp_safe_redirect('/login/'); exit; }
 
 $page_title = get_the_title();
 
-$user = $current_user;
+//$user = $current_user;
 $tz  = new DateTimeZone('Europe/London');
 /*$username = urldecode($wp_query->query_vars['cft-member']);
 if (isset($username) && $username != ''){
@@ -26,6 +26,7 @@ if (isset($username) && $username != ''){
 		wp_safe_redirect('/members-only/account/'); exit;
 	}
 } */
+
 
 $comps = get_posts(array(
   'post_status'     => array('future'),
@@ -39,24 +40,53 @@ $comps = get_posts(array(
   )
 ));
 
+$myDogs = array();
+$otherDogs = array();
+$group = get_user_meta($current_user->ID, 'household_group', true);
+if (isset($group) && $group != ''){	
+	$myDogs = get_posts(array(
+		'post_status'     => array('publish'),
+		'post_type'				=> 'cft_dog',
+		'posts_per_page'	=> -1,
+		'orderby'					=> 'title',
+		'order'						=> 'ASC',
+		'meta_query'			=> array(
+			array('key' => 'household_group', 'value' => $group)
+		)
+	));
 
-$myDogs = get_posts(array(
-  'post_status'     => array('publish'),
-	'post_type'				=> 'cft_dog',
-	'posts_per_page'	=> -1,
-	'orderby'					=> 'title',
-  'order'						=> 'ASC',
-	'author'					=> $current_user->ID
-));
+	$otherDogs = get_posts(array(
+		'post_status'     => array('publish'),
+		'post_type'				=> 'cft_dog',
+		'posts_per_page'	=> -1,
+		'orderby'					=> 'title',
+		'order'						=> 'ASC',
+		'meta_query'			=> array(
+			'relation' => 'OR',
+			array('key' => 'household_group', 'value' => $group, 'compare' => '!='),
+			array('key' => 'household_group', 'value' => $group, 'compare' => 'NOT EXISTS'),
+		)		
+	));
 
-$otherDogs = get_posts(array(
-  'post_status'     => array('publish'),
-	'post_type'				=> 'cft_dog',
-	'posts_per_page'	=> -1,
-	'orderby'					=> 'title',
-  'order'						=> 'ASC',
-	'author__not_in'	=> array($current_user->ID)
-));
+} else {
+	$myDogs = get_posts(array(
+		'post_status'     => array('publish'),
+		'post_type'				=> 'cft_dog',
+		'posts_per_page'	=> -1,
+		'orderby'					=> 'title',
+		'order'						=> 'ASC',
+		'author'					=> $current_user->ID
+	));
+
+	$otherDogs = get_posts(array(
+		'post_status'     => array('publish'),
+		'post_type'				=> 'cft_dog',
+		'posts_per_page'	=> -1,
+		'orderby'					=> 'title',
+		'order'						=> 'ASC',
+		'author__not_in'	=> array($current_user->ID)
+	));
+}
 
 $dogs = array_merge($myDogs, $otherDogs);
 
@@ -115,7 +145,8 @@ get_header();
 								$age = $dob->diff(new DateTime('now', $tz))->y;
 								$ageOK = ($age > 0) ? 1 : 0;
 
-								if ($dog->post_author == $current_user->ID){
+								//if ($dog->post_author == $current_user->ID){
+								if (in_array($dog, $myDogs)){
 									echo '<tr><td class="danger"><strong>'.$dog->post_title.'</strong></td>';
 								}else{
 									echo '<tr><td>'.$dog->post_title.'</td>';
@@ -143,7 +174,7 @@ get_header();
 				</div>
 
 
-			<?php debug_array($comps); ?>
+			<?php //debug_array($comps); ?>
 			
 			<!--div class="row">
 				<div class="col-md-8">
