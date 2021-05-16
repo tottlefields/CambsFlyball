@@ -18,8 +18,9 @@
 		<!-- <hgroup> -->
 			<h1><?php the_title(); ?>
 			
-			<?php $kc_name = get_post_meta( get_the_ID() , 'kc_name', true );
-			if ( isset($kc_name) && $kc_name != '' ) : ?><div class="pull-right hidden-xs"><small><em>	 <?php echo $kc_name; ?></em></small></div>
+			<?php $kc_name = get_post_meta( get_the_ID() , 'kc_name', true ); ?>
+			<?php if ( isset($kc_name) && $kc_name != '' ) : ?>
+				<div class="pull-right hidden-xs"><small><em><?php echo $kc_name; ?></em></small></div>
 			<?php endif;?>
 			<h1>
 			

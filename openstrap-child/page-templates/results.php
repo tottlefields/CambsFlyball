@@ -8,6 +8,9 @@ get_header();
 $year = ($wp_query->query_vars['cft-year']) ? urldecode($wp_query->query_vars['cft-year']) : date('Y');
 $page_title = $year." ".get_the_title();
 
+$end_date = $year.'1231';
+if ($year == date('Y')){ $end_date = date('Ymd'); }
+
 $comps = get_posts(array(
   'post_status'     => array('publish'),
   'posts_per_page'  => -1,
@@ -17,7 +20,7 @@ $comps = get_posts(array(
   'orderby'         => 'meta_value_num',
   'meta_query'      => array(
     array('key' => 'start_date', 'value' => $year.'0101', 'compare' => '>='),
-    array('key' => 'end_date', 'value' => $year.'1231', 'compare' => '<=')
+    array('key' => 'end_date', 'value' => $end_date, 'compare' => '<=')
   )
 ));
 //debug_array($comps);
@@ -46,8 +49,8 @@ foreach($comps as $comp) : setup_postdata($comp);
           <h3>
           <a href="<?php echo get_post_permalink($comp->ID) ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php echo $comp->post_title; ?></a>
           <div class="pull-right hidden-xs">
-            <small class="visible-sm"><?php echo $start_date->format('jS M'); ?></small>
-            <small class="hidden-sm"><?php echo $dates; ?></small>
+            <small class="visible-sm-inline"><?php echo $start_date->format('jS M'); ?></small>
+            <small class="visible-md-inline visible-lg-inline"><?php echo $dates; ?></small>
           </div>
           </h3>
           <hr class="post-meta-hr">

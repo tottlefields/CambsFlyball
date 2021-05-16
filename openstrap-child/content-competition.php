@@ -13,10 +13,23 @@
 	$display_post_meta_info = of_get_option('display_post_meta_info');
 	$display_post_page_nav = of_get_option('display_post_page_nav');
 ?>
+
+<?php
+$start_date = DateTime::createFromFormat('Ymd', get_post_meta( get_the_ID(), 'start_date', true ));
+$end_date   = DateTime::createFromFormat('Ymd', get_post_meta( get_the_ID(), 'end_date', true ));
+$dates = $start_date->format('jS M');
+if (isset($end_date) && $end_date != '' && $start_date != $end_date){ $dates .= ' to '.$end_date->format('jS M'); }
+?>
+
 <article>
 	<header class="entry-header">
 		<hgroup>
-			<h1><?php the_title(); ?><span class="pull-right"><small>Hello</small></span></h1>		
+			<h1><?php the_title(); ?>
+				<div class="pull-right hidden-xs">
+					<small class="visible-sm-inline hidden-md hidden-lg"><?php echo $start_date->format('jS M'); ?></small>
+          <small class="hidden-sm visible-md-inline visible-lg-inline"><?php echo $dates; ?></small>
+        </div>
+			</h1>		
 			<?php if(!empty($display_post_meta_info)):?>		
 			<div class="post-meta entry-header">
 			
@@ -48,6 +61,7 @@
 		</hgroup>
 	</header>
 	
+	<?php if (DateTime::createFromFormat('Ymd', get_post_meta( get_the_ID(), 'end_date', true ), $tz)->format('Ymd') <= date('Ymd')) { ?>
 	<div class="entry-content">
 	<?php the_content(); ?>
 	</div><!-- .entry-content -->	
@@ -57,46 +71,14 @@
 			<h3>Results</h3>
 		</div>
 	</div>
+	<?php } else { ?>
+		<what3words-address words="<?php echo get_post_meta( get_the_ID(), 'w3w', true ); ?>" tooltip-location="event location" ></what3words-address>
+		<hr/>
+	<?php } ?>
 	<footer class="entry-meta">					
 		<p><?php wp_link_pages(); ?></p>
 		<hr/>
-		<?php if(!empty($display_post_page_nav)):?>
-		<div class="panel panel-default">
-		  <div class="panel-heading">
-		 
-			<nav class="nav-single">
-				<div class="row">	
-					<div class="col-md-6">
-						<span class="nav-previous pull-left"><?php previous_post_link( '%link', '<i class="icon-arrow-left"></i> %title' ); ?></span>
-					</div>	
-					<div class="col-md-6">
-						<span class="nav-next pull-right"><?php next_post_link( '%link', '%title <i class="icon-arrow-right"></i>' ); ?></span>
-					</div>	
-				</div>	
-			</nav><!-- .nav-single -->	
-		  
-		  </div>
-		  
-		  <div class="panel-body">
-			<div class="cat-tag-info">
-				<div class="row">
-				<div class="col-md-12 post_cats">
-				<?php _e('<i class="icon-folder-open"></i> &nbsp;', 'openstrap' );?>
-				<?php the_category(', '); ?>
-				</div>
-				</div>
-				<?php if(has_tag()):?>
-				<div class="row">
-				<div class="col-md-12 post_tags">
-				<?php _e('<i class="icon-tags"></i> &nbsp;', 'openstrap' );?>
-				<?php the_tags('',', ',''); ?>
-				</div>				
-				</div>
-				<?php endif;?>
-			</div>				
-		  </div>
-		</div>	
-		<?php endif;?>	
+	
 		<?php get_template_part('author-box'); ?>		
 		
 		<?php comments_template( '', true ); ?>

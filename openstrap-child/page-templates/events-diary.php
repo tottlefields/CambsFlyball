@@ -15,12 +15,11 @@ if (!is_user_logged_in()) { wp_safe_redirect('/login/'); exit; }
 $page_title = get_the_title();
 
 //$user = $current_user;
-$tz  = new DateTimeZone('Europe/London');
 $today = new DateTime('now', $tz);
 
 
 $comps = get_posts(array(
-  'post_status'     => array('future'),
+  'post_status'     => array('publish'),
   'posts_per_page'  => 10,
   'category'        => 16,
   'order'           => 'ASC',
@@ -132,7 +131,11 @@ get_header();
 						//array_push($dates, $compDates);
 						//debug_array($dates);
 					?>
-										<th class="text-center" colspan="<?php echo count($compDates); ?>"><?php echo $comp->post_title; ?></th>
+										<th class="text-center" colspan="<?php echo count($compDates); ?>"><a href="<?php echo get_permalink($comp); ?>"><?php echo $comp->post_title; ?></a>
+						<?php if (get_post_meta( $comp->ID, 'w3w', true ) != '') { 
+							echo '<a href="https://map.what3words.com/'.get_post_meta( $comp->ID, 'w3w', true ).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/w3w.png" style="width:25%;box-shadow: none;" /></a>';
+						} ?>
+									</th>
 						<?php endforeach;?>
 									</tr>
 									<tr>

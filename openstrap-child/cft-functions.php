@@ -1,5 +1,7 @@
 <?php
 
+$tz  = new DateTimeZone('Europe/London');
+
 function get_cft_dog_awards ($dog_id){
 	global $wpdb;
 	

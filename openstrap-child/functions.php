@@ -9,9 +9,15 @@ add_filter('query_vars', 'add_query_vars');
 add_filter('rewrite_rules_array', 'add_rewrite_rules');				// hook add_rewrite_rules function into rewrite_rules_array
 
 function enqueue_parent_styles() {
+	wp_dequeue_style( 'bootstrap' );
+	wp_dequeue_style( 'bootstrap-custom' );
 	wp_dequeue_style( 'openstrap-style' );
-	wp_enqueue_style( 'parent-style', get_template_directory_uri().'/style.css' );
+
+	wp_enqueue_style( 'parent-style', get_template_directory_uri().'/style.css' , array('bootstrap'));
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri().'/style.css', array( 'parent-style' ), wp_get_theme()->get('Version') );
+	wp_enqueue_style( 'bootstrap', get_stylesheet_directory_uri().'/assets/css/bootstrap.css', array(), '3.0.0' );
+	wp_enqueue_style( 'bootstrap-custom', get_template_directory_uri().'/css/custom.css', array('bootstrap'), '3.0.0' );
+
 }
 
 function cft_enqueue_scripts() {
@@ -24,6 +30,10 @@ function cft_enqueue_scripts() {
 	// BS DatePicker
 	wp_register_script ( 'datepicker', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', array ('jquery-core', 'bootstrap'), '1.9.0', true );
 	wp_enqueue_script ( 'datepicker' );
+
+	//What 3 Words
+	wp_register_script ( 'js-ws3', 'https://assets.what3words.com/sdk/v3/what3words.js', array(), '1.7.0', true);
+	wp_enqueue_script ( 'js-ws3' );
 
 	// Main functions js file
 	wp_register_script ( 'js-functions', get_stylesheet_directory_uri().'/assets/js/functions.js', array ('jquery'), '0.1.1', true );
