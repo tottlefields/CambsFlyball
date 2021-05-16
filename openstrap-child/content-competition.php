@@ -124,14 +124,15 @@ foreach($team_posts as $team){
 							$dog = $team->dogs[$i];
 							$class = "text-center";
 							if ($diary_details[$d->format('Ymd')][$dog->ID] == "Y"){ $class .= ' success text-success"'; $dog_count++; }
-							if ($diary_details[$d->format('Ymd')][$dog->ID] == "N"){ $class .= ' danger text-danger"';}
+							else if ($diary_details[$d->format('Ymd')][$dog->ID] == "N"){ $class .= ' danger text-danger"';}
+							else { $class .=' active'; }
 							$diary_details[$d->format('Ymd')][$dog->ID] = 1;
 							echo '<td class="'.$class.'" width="10%">'.$dog->post_title.'</td>';
 						} else {
-							echo '<td width="10%">&nbsp;</td>';
+							echo '<td width="10%" class="text-center active text-muted">--</td>';
 						}
 					}
-					echo '<th width="5%" class="text-right">'.$dog_count.'</th>';
+					echo '<th width="10%" class="text-center">'.$dog_count.'</th>';
 
 					echo "</tr>";
 				}
