@@ -28,7 +28,7 @@
 																	<option value="Special Event">Special Event</option>
 																	<option value="Bonus Ball">Bonus Ball</option>
 																	<option value="Membership">Membership</option>
-																	<option value="Mercahndise">Merchandise</option>
+																	<option value="Merchandise">Merchandise</option>
 																</select>
 															</div>
 															<label for="event_desc" class="sr-only">Event</label>
