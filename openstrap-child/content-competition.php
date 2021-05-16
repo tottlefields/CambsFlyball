@@ -72,7 +72,7 @@ if (isset($end_date) && $end_date != '' && $start_date != $end_date){ $dates .= 
 		</div>
 	</div>
 	<?php } else { 
-		if (get_post_meta( $comp->ID, 'w3w', true ) != '') { ?>
+		if (get_post_meta( get_the_ID(), 'w3w', true ) != '') { ?>
 		<what3words-address words="<?php echo str_replace('///', '', get_post_meta( get_the_ID(), 'w3w', true )); ?>" tooltip-location="event location" ></what3words-address>
 		<?php } ?>
 		<hr/>
