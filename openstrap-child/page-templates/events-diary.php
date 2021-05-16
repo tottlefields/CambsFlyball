@@ -133,7 +133,7 @@ get_header();
 					?>
 										<th class="text-center" colspan="<?php echo count($compDates); ?>"><a href="<?php echo get_permalink($comp); ?>"><?php echo $comp->post_title; ?></a>
 						<?php if (get_post_meta( $comp->ID, 'w3w', true ) != '') { 
-							echo '<a href="https://map.what3words.com/'.get_post_meta( $comp->ID, 'w3w', true ).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/w3w.png" style="width:25%;box-shadow: none;" /></a>';
+							echo '<a href="https://map.what3words.com/'.str_reaplce('///', '', get_post_meta( $comp->ID, 'w3w', true )).'"><img src="'.get_stylesheet_directory_uri().'/assets/images/w3w.png" style="width:25%;box-shadow: none;" /></a>';
 						} ?>
 									</th>
 						<?php endforeach;?>
