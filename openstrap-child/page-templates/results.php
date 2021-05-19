@@ -49,8 +49,8 @@ foreach($comps as $comp) : setup_postdata($comp);
           <h3>
           <a href="<?php echo get_post_permalink($comp->ID) ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php echo $comp->post_title; ?></a>
           <div class="pull-right hidden-xs">
-            <small class="visible-sm-inline"><?php echo $start_date->format('jS M'); ?></small>
-            <small class="visible-md-inline visible-lg-inline"><?php echo $dates; ?></small>
+            <small class="visible-sm-inline hidden-md hidden-lg"><?php echo $start_date->format('jS M'); ?></small>
+            <small class="hidden-sm visible-md-inline visible-lg-inline"><?php echo $dates; ?></small>
           </div>
           </h3>
           <hr class="post-meta-hr">
