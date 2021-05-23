@@ -63,6 +63,35 @@ function get_dogs_for_user($user){
 }
 
 
+function get_results_for_event($event_id){
+	global $wpdb;
+
+	return $wpdb->get_results("select team, post_name as slug, team_type, race_date, division, seed, place, fastest_time, new_fastest 
+	from cft_event_stats left outer join wp_posts on team_id=wp_posts.ID 
+	where event_id=".$event_id." order by race_date, division+0, place+0");
+}
+
+
+function get_stats_for_event($event_id){
+	global $wpdb;
+
+	return $wpdb->get_results("select dog_id, post_title as name, post_name as slug, points, heats, fastest_time, average_time, consistency, team, race_date 
+	from cft_dog_stats t1 left outer join wp_posts t2 on t1.dog_id=t2.ID 
+	where event_id=".$event_id." order by post_title");
+}
+
+function get_awards_for_event($start_date, $end_date){
+	global $wpdb;
+
+	$awards = array();
+	$details = $wpdb->get_results("select post_id, award from cft_dog_awards where date_gained between '".$start_date->format('Y-m-d')."' and '".$end_date->format('Y-m-d')."'");
+	foreach ($details as $award){
+		$awards[$award->post_id] = $award->award;
+	}
+	return $awards;
+}
+
+
 function get_members_money($user){
 	global $wpdb;
 	
@@ -203,7 +232,56 @@ Ellen<br />";
 	sendEmail($user->user_email, $user->first_name, 'New Invoice(s) Added', $msg);
 }
 
-
+function getOrdinal($number=0){
+	// Handles special case three digit numbers ending
+	// with 11, 12 or 13 - ie, 111th, 112th, 113th, 211th, et al
+	If ($number > 99) {
+					$intEndNum = substr($number,-2);
+					If ($intEndNum >= 11 And $intEndNum <= 13) {
+									switch ($intEndNum){
+													Case (11 or 12 or 13):
+													Return "th";
+													break;
+									}
+					}
+	}
+	If ($number >= 21) {
+	// Handles 21st, 22nd, 23rd, et al
+					switch (substr($number,-1)) {
+									Case 0:
+									Return "th";
+									break;
+									Case 1:
+									Return "st";
+									break;
+									Case 2:
+									Return "nd";
+									break;
+									Case 3:
+									Return "rd";
+									break;
+									Case (4 || 5 || 6 || 7 || 8 || 9):
+									Return "th";
+									break;
+					}
+	} else {
+					// Handles 1st to 20th
+					switch ($number){
+									Case 1:
+									Return "st";
+									break;
+									Case 2:
+									Return "nd";
+									break;
+									Case 3:
+									Return "rd";
+									break;
+									Case (4 || 5 || 6 || 7 || 8 || 9 || 10 || 11 || 12 || 13 || 14 || 15 || 16 || 17 || 18 || 19 || 20):
+									Return "th";
+									break;
+					}
+	}
+} // end func am_GetOrdinal
 
 
 

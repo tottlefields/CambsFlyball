@@ -84,13 +84,123 @@ foreach($team_posts as $team){
 	</header>
 	
 	<?php if (DateTime::createFromFormat('Ymd', get_post_meta( get_the_ID(), 'end_date', true ), $tz)->format('Ymd') <= date('Ymd')) { ?>
-	<div class="entry-content">
-	<?php the_content(); ?>
-	</div><!-- .entry-content -->	
-	<hr/>
+	<?php if (the_content()) { ?>
+		<div class="entry-content">
+		<?php the_content(); ?>
+		</div><!-- .entry-content -->	
+		<hr/>
+	<?php } ?>
 	<div class="row">
 		<div class="col-xs-12">
 			<h3>Results</h3>
+			<div class="row">
+				<div class="col-sm-4 col-lg-3">
+				<?php if ( has_post_thumbnail(get_the_ID())) : ?>
+					<div class="featured-img pull-left hidden-xs"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail'); ?></div>
+				<?php endif; ?>
+				</div>
+				<?php $results = get_results_for_event(get_the_ID()); if (count($results) > 0) { ?>
+				<div class="col-sm-8 col-lg-9">
+					<div class="table-responsive">
+						<table class="table table-condensed">
+							<tr>
+								<th class="text-center hidden-xs hidden-sm">Date</th>
+								<th class="text-center">Team</th>
+								<th class="text-center">Div<span class="hidden-xs"> (Seed)</span></th>
+								<th class="text-center">Place</th>
+								<th class="text-center">F/T</th>
+								<th class="text-center">&nbsp;</th>
+							</tr>
+							<?php foreach ($results as $team){
+								$raceDate = DateTime::createFromFormat('Ymd', $team->race_date);
+								$teamCell = (isset($team->slug)) ? '<a href="/teams/'.$team->slug.'">'.$team->team.'</a>' : $team->team;
+								$division = '';
+								if ($team->division > 0){
+									$division = 'Div '.$team->division;
+									if ($team->seed > 0) { $division .= '<span class="hidden-xs"> ('.$team->seed.getOrdinal($team->seed).')</span>'; }
+								}
+								$place = $team->place;
+								if ($place == 1){ $place = '<span class="text-primary"><strong>1st</strong></span>'; }
+								elseif ($place > 0){ $place .= getOrdinal($team->place); }
+
+								$time = '--:--';
+								if ($team->fastest_time > 0){ 
+									if ($team->team_type == 'sync' || $team->team_type == 'tag'){ $time = '<em>'.strtoupper($team->team_type).'</em>'; }
+									else $time = $team->fastest_time;
+								}
+
+								$newFT = ($team->new_fastest) ? '<span class="label label-primary">New<span class="hidden-sm hidden-xs"> Fastest Time</span></span>' : '';
+
+								echo '
+									<tr>
+										<td class="text-center hidden-xs hidden-sm">'.$raceDate->format('jS M Y').'</td>
+										<td class="text-center">'.$teamCell.'</td>
+										<td class="text-center">'.$division.'</td>
+										<td class="text-center">'.$place.'</td>
+										<td class="text-center">'.$time.'</td>
+										<td class="text-center">'.$newFT.'</td>							
+									</td>';
+							} ?>
+						</table>
+						</div>
+				</div>
+				<?php } ?>
+			</div>
+
+			<?php $stats = get_stats_for_event(get_the_ID()); if (count($stats) > 0) { $awards = get_awards_for_event($start_date, $end_date); ?>
+			<div class="row">
+			<div class="col-xs-12">
+			<h4>Individual Dog's Results</h4>
+				<div class="table-responsive">
+					<small>
+						<table class="table table-condensed">
+							<tr>
+								<th class="text-center">Dog</th>
+								<th class="text-center hidden-xs">Team</th>
+								<th class="text-center hidden-xs hidden-sm">Heats Raced</th>
+								<th class="text-center">Fastest Time</th>
+								<th class="text-center hidden-xs">Average Time</th>
+								<th class="text-center hidden-xs">Consistency (%)</th>
+								<th class="text-center">Points Gained</th>
+								<th class="text-center">Award Earned</th>
+							</tr>
+
+						<?php foreach ($stats as $dog){
+							$award = (in_array($dog->dog_id, array_keys($awards))) ? '<span class="label label-primary">'.$awards[$dog->dog_id].'</span>' : '';
+							$dogCell = (isset($dog->slug)) ?'<a href="/dogs/'.$dog->slug.'">'.$dog->name.'</a>' : $dog->name;
+							echo '
+								<tr>
+									<td class="text-center">'.$dogCell.'</td>
+									<td class="text-center hidden-xs" nowrap>'.$dog->team.'</td>
+									<td class="text-center hidden-xs hidden-sm">'.$dog->heats.'</td>
+									<td class="text-center">'.$dog->fastest_time.'</td>
+									<td class="text-center hidden-xs">'.$dog->average_time.'</td>
+									<td class="text-center hidden-xs">'.$dog->consistency.'</td>
+									<td class="text-center">'.$dog->points.'</td>
+									<td class="text-center">'.$award.'</td>
+								</tr>';
+						}
+						/*[0] => stdClass Object
+						(
+								[dog_id] => 390
+								[name] => Amber
+								[slug] => amber-webster
+								[points] => 165
+								[heats] => 15
+								[fastest_time] => 4.89
+								[average_time] => 4.99
+								[consistency] => 95.52
+								[team] => Cambridgeshire Cock-Ups
+								[race_date] => 20200209
+						) */
+						?>
+
+
+						</table>
+					</small>
+				</div>
+			</div></div>
+			<?php } ?>
 		</div>
 	</div>
 	<?php } else { 

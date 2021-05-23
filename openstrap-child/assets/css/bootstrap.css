@@ -6937,7 +6937,7 @@ td.visible-lg {
   }
 }
 
-.hidden-xs {
+/*.hidden-xs {
   display: block !important;
 }
 
@@ -6948,7 +6948,7 @@ tr.hidden-xs {
 th.hidden-xs,
 td.hidden-xs {
   display: table-cell !important;
-}
+}*/
 
 @media (max-width: 767px) {
   .hidden-xs {
