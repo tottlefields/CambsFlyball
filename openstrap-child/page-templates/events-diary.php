@@ -19,7 +19,7 @@ $today = new DateTime('now', $tz);
 
 
 $comps = get_posts(array(
-  'post_status'     => array('publish'),
+  'post_status'     => array('publish', 'future'),
   'posts_per_page'  => 10,
   'category'        => 16,
   'order'           => 'ASC',
