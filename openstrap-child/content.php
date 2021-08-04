@@ -9,7 +9,8 @@
 ?>
 
 <?php 
-	$display_post_meta_info = of_get_option('display_post_meta_info');
+	//$display_post_meta_info = of_get_option('display_post_meta_info');
+	$display_post_meta_info = true;
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?> >
@@ -36,11 +37,11 @@
 					)
 					);
 				?>         
-			<div class="pull-right">				
+			<!-- <div class="pull-right">				
 				<span class="post_comment"><i class="icon-comments"></i>
 				<a href="<?php the_permalink() ?>#comments"><?php comments_number(__('No comments', 'openstrap'),__('One comment','openstrap'),__('% comments','openstrap')); ?></a>
 				</span>
-			</div>				
+			</div> -->		
 		</div> 
 		<?php endif;?>
 		<hr class="post-meta-hr"/>
