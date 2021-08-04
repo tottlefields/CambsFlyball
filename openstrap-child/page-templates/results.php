@@ -58,12 +58,14 @@ foreach($comps as $post) : setup_postdata($post); //setup_postdata($comp);
         </hgroup>
       </header>
     
-      <div class="col-sm-4 col-lg-3">
-      <?php if ( has_post_thumbnail(get_the_ID())) : ?>
-		    <div class="featured-img pull-left"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail'); ?></div>
-	    <?php endif; ?>
+      <div class="row">
+        <div class="col-sm-4 col-md-3 hidden-xs">
+        <?php if ( has_post_thumbnail(get_the_ID())) : ?>
+          <div class="featured-img pull-left"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail'); ?></div>
+        <?php endif; ?>
+        </div>
+        <?php get_template_part('part-templates/competition', 'results'); ?>
       </div>
-      <?php get_template_part('part-templates/competition', 'results'); ?>
 	    <div class="clearfix"/>
     </article>
 

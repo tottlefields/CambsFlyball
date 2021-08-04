@@ -94,9 +94,9 @@ foreach($team_posts as $team){
 		<div class="col-xs-12">
 			<h3>Results</h3>
 			<div class="row">
-				<div class="col-sm-4 col-lg-3">
+				<div class="col-sm-4 col-md-3 hidden-xs">
 				<?php if ( has_post_thumbnail(get_the_ID())) : ?>
-					<div class="featured-img pull-left hidden-xs"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail'); ?></div>
+					<div class="featured-img pull-left"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail'); ?></div>
 				<?php endif; ?>
 				</div>
 							
