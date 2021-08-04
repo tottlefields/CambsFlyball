@@ -12,6 +12,14 @@
 <?php 
 	$display_post_meta_info = of_get_option('display_post_meta_info');
 	$display_post_page_nav = of_get_option('display_post_page_nav');
+
+	$awards = get_cft_dog_awards(get_the_ID());
+	$award_dates = array();
+	if (count($awards) > 0){
+		foreach ($awards as $award){
+			$award_dates[$award->race_date]  = $award->award;
+		}
+	}
 ?>
 <article>
 	<header class="entry-header">
@@ -141,7 +149,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<strong><small>Awards Gained</small></strong><small>
-						<?php $awards = get_cft_dog_awards(get_the_ID());						
+						<?php						
 						if (count($awards) >0){ ?>
 						<ul style="padding-inline-start:15px;">
 						<?php foreach ($awards as $award){ ?>
@@ -244,56 +252,48 @@
 				</form>
 			</div>
 		</div>
-	</div>
-	<?php the_content(); ?>
-	
-	
+
+		<hr class="post-meta-hr"/>	
+
+		<?php // the_content(); ?>
+
+		<?php
+		//debug_array($award_dates);
+		$stats = get_stats_for_dog(get_the_ID());
+		if (count($stats) > 0){
+			echo "<h3>".get_the_title()."'s Results</h3>";
+			//debug_array($stats[0]);
+			echo '<small><table class="table table-condensed">';
+			echo '<tr>
+				<th class="text-center">Event</th>
+				<th class="text-center">Team</th>
+				<th class="text-center hidden-xs hidden-sm">Heats Raced</th>
+				<th class="text-center">FT</th>
+				<th class="text-center hidden-xs hidden-sm">AVT</th>
+				<th class="text-center hidden-xs">Consistency (%)</th>
+				<th class="text-center">Points</th>
+				<th class="text-center hidden-xs hidden-sm">Award</th>
+      </tr>';
+			foreach ($stats as $row){
+				$race_date = DateTime::createFromFormat('Ymd', $row->race_date);
+				$award = (isset($award_dates[$row->race_date])) ? '<span class="label label-primary">'.$award_dates[$row->race_date].'</span>' : '&nbsp;';
+				echo '<tr>';
+				echo '<td class="text-center"><a href="/'.$row->slug.'">'.$row->event_title.'</a><span class="hidden-xs"><br /><em>'.$race_date->format('jS F Y').'</em></span></td>';
+				echo '<td class="text-center">'.$row->team.'<span class="hidden-xs"><br /><em>'.$row->place.getOrdinal($row->place);
+				if (isset($row->division)){ echo ' ('.$row->division.')' ;} echo '</em></span></td>';
+				echo '<td class="text-center hidden-xs hidden-sm">'.$row->heats.'</td>';
+				echo '<td class="text-center">'.$row->fastest_time.'</td>';
+				echo '<td class="text-center hidden-xs hidden-sm">'.$row->average_time.'</td>';
+				echo '<td class="text-center hidden-xs">'.$row->consistency.'</td>';
+				echo '<td class="text-center">'.$row->points.'</td>';
+				echo '<td class="text-center hidden-xs hidden-sm">'.$award.'</td>';
+				echo '</tr>';
+			}
+
+			echo '</table></small>';
+		}
+		?>
 	
 	
 	</div><!-- .entry-content -->	
-	<footer class="entry-meta">					
-		<p><?php wp_link_pages(); ?></p>
-		<hr/>
-		<?php if(!empty($display_post_page_nav)):?>
-		<div class="panel panel-default">
-		  <div class="panel-heading">
-		 
-			<nav class="nav-single">
-				<div class="row">	
-					<div class="col-md-6">
-						<span class="nav-previous pull-left"><?php previous_post_link( '%link', '<i class="icon-arrow-left"></i> %title' ); ?></span>
-					</div>	
-					<div class="col-md-6">
-						<span class="nav-next pull-right"><?php next_post_link( '%link', '%title <i class="icon-arrow-right"></i>' ); ?></span>
-					</div>	
-				</div>	
-			</nav><!-- .nav-single -->	
-		  
-		  </div>
-		  
-		  <div class="panel-body">
-			<div class="cat-tag-info">
-				<div class="row">
-				<div class="col-md-12 post_cats">
-				<?php _e('<i class="icon-folder-open"></i> &nbsp;', 'openstrap' );?>
-				<?php the_category(', '); ?>
-				</div>
-				</div>
-				<?php if(has_tag()):?>
-				<div class="row">
-				<div class="col-md-12 post_tags">
-				<?php _e('<i class="icon-tags"></i> &nbsp;', 'openstrap' );?>
-				<?php the_tags('',', ',''); ?>
-				</div>				
-				</div>
-				<?php endif;?>
-			</div>				
-		  </div>
-		</div>	
-		<?php endif;?>	
-		<?php get_template_part('author-box'); ?>		
-		
-		<?php comments_template( '', true ); ?>
-	</footer>
-
 </article>

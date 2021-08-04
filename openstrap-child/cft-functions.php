@@ -5,7 +5,8 @@ $tz  = new DateTimeZone('Europe/London');
 function get_cft_dog_awards ($dog_id){
 	global $wpdb;
 	
-	$awards = $wpdb->get_results("select award, date_format(date_gained, '%d/%m/%Y') as formatted_date from cft_dog_awards where post_id = '".$dog_id."' order by date_gained" );
+	$awards = $wpdb->get_results("select award, date_format(date_gained, '%Y%m%d') as race_date, date_format(date_gained, '%d/%m/%Y') as formatted_date 
+	from cft_dog_awards where post_id = '".$dog_id."' order by date_gained" );
 	
 	return $awards;
 	
@@ -78,6 +79,17 @@ function get_stats_for_event($event_id){
 	return $wpdb->get_results("select dog_id, post_title as name, post_name as slug, points, heats, fastest_time, average_time, consistency, team, race_date 
 	from cft_dog_stats t1 left outer join wp_posts t2 on t1.dog_id=t2.ID 
 	where event_id=".$event_id." order by post_title");
+}
+
+
+function get_stats_for_dog($dog_id){
+	global $wpdb;
+
+	return $wpdb->get_results("select dog_id, post_title as event_title, post_name as slug, points, heats, t1.fastest_time, average_time, consistency, 
+	t1.team, t1.race_date, case when (division>0) then concat('Div ', division) else division end as division, place 
+	from cft_dog_stats t1 left outer join wp_posts t2 on t1.event_id=t2.ID 
+	left outer join cft_event_stats t3 on t1.event_id=t3.event_id and t1.race_date=t3.race_date and t1.team=t3.team
+	where dog_id=".$dog_id." order by race_date DESC");
 }
 
 function get_awards_for_event($start_date, $end_date){
