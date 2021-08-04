@@ -36,18 +36,19 @@ $comps = get_posts(array(
     </header>
 
 <?php 
-foreach($comps as $comp) : setup_postdata($comp); 
-  $start_date = DateTime::createFromFormat('Ymd', get_post_meta( $comp->ID, 'start_date', true ));
-  $end_date   = DateTime::createFromFormat('Ymd', get_post_meta( $comp->ID, 'end_date', true ));
+global $post;
+foreach($comps as $post) : setup_postdata($post); //setup_postdata($comp); 
+  $start_date = DateTime::createFromFormat('Ymd', get_post_meta( get_the_ID(), 'start_date', true ));
+  $end_date   = DateTime::createFromFormat('Ymd', get_post_meta( get_the_ID(), 'end_date', true ));
   $dates = $start_date->format('jS M');
   if (isset($end_date) && $end_date != '' && $start_date != $end_date){ $dates .= ' to '.$end_date->format('jS M'); }
 ?>
 
-    <article id="post-<?php echo $comp->ID; ?>" <?php post_class('', $comp->ID); ?>>
+    <article id="post-<?php the_ID(); ?>" <?php post_class('', get_the_ID()); ?>>
 	    <header>
         <hgroup>
           <h3>
-          <a href="<?php echo get_post_permalink($comp->ID) ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php echo $comp->post_title; ?></a>
+          <a href="<?php echo get_post_permalink(get_the_ID()) ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'openstrap' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php echo get_the_title(); ?></a>
           <div class="pull-right hidden-xs">
             <small class="visible-sm-inline hidden-md hidden-lg"><?php echo $start_date->format('jS M'); ?></small>
             <small class="hidden-sm visible-md-inline visible-lg-inline"><?php echo $dates; ?></small>
@@ -57,11 +58,14 @@ foreach($comps as $comp) : setup_postdata($comp);
         </hgroup>
       </header>
     
-  <?php if ( has_post_thumbnail($comp->ID)) : ?>
-		  <div class="featured-img pull-left"><?php echo get_the_post_thumbnail($comp->ID, 'thumbnail'); ?></div>
-	<?php endif; ?>
-	<div class="clearfix"/>
-</article>
+      <div class="col-sm-4 col-lg-3">
+      <?php if ( has_post_thumbnail(get_the_ID())) : ?>
+		    <div class="featured-img pull-left"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail'); ?></div>
+	    <?php endif; ?>
+      </div>
+      <?php get_template_part('part-templates/competition', 'results'); ?>
+	    <div class="clearfix"/>
+    </article>
 
 <?php endforeach;?>  
   </article><!-- #post -->
