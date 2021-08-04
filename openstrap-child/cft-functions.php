@@ -30,6 +30,23 @@ function get_dogs_for_team($team_id){
 	
 }
 
+function get_all_dogs(){
+	global $wpdb;
+	
+	$args = array(
+			'post_type'     => 'cft_dog',
+			'post_status'   => array('publish'),
+			'posts_per_page'=> -1,
+			'orderby'		=> 'name',
+			'order'			=> 'ASC'
+	);
+	
+	$dogs = get_posts($args);
+	
+	return $dogs;
+	
+}
+
 function get_dogs_for_user($user){
 	global $wpdb;
 	

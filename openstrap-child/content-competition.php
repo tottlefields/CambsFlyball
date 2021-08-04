@@ -29,6 +29,11 @@ $team_posts = get_posts(array(
   'orderby'         => 'meta_value_num',
 ));
 $teams = array();
+$all_dogs = array();
+$dogs = get_all_dogs();
+foreach ($dogs as $dog){
+	$all_dogs[$dog->ID] = $dog;
+}
 $max_dogs = 6;
 foreach($team_posts as $team){
 	$dogs = get_dogs_for_team($team->ID);
@@ -199,17 +204,36 @@ foreach($team_posts as $team){
 						}
 					}
 					echo '<th width="10%" class="text-center">'.$dog_count.'</th>';
-
 					echo "</tr>";
 				}
+				echo "<tr><th>Extra Dogs</th>";
+				$dog_count = 0;
+				$extra_dogs = array();
 				foreach ($diary_details[$d->format('Ymd')] as $dog_id => $notSeen){
-					if (!$notSeen){
-						//TODO : Add an "other" row...?
-						debug_array($diary_details[$d->format('Ymd')]);
-						break;						
+					if ($notSeen == "Y" && isset($all_dogs[$dog_id])){
+						$dog = $all_dogs[$dog_id];
+						array_push($extra_dogs, $dog);
+						//echo $dog->post_title.", ";				
 					}
 				}
+				if (count($extra_dogs) <= $max_dogs){
+					for ($i=0; $i<$max_dogs; $i++){
+						if (isset($extra_dogs[$i])){
+							$dog = $extra_dogs[$i];
+							$class = "text-center";
+							$class .= ' success text-success"';
+							$dog_count++;
+							echo '<td class="'.$class.'" width="10%">'.$dog->post_title.'</td>';
+						} else {
+							echo '<td width="10%" class="text-center active text-muted">--</td>';
+						}
+					}
+				}
+				echo '<th width="10%" class="text-center">'.$dog_count.'</th>';
+				echo "</tr>";
+
 				echo "</table>";
+				
 			}
 		}
 	} ?>
