@@ -235,12 +235,12 @@ function emailInvoice($user_id, $invoices){
 		
 				<p>To view your current account status with the club please login to the club website and visit the <a href=\"https://cambridgeshire-flyball.org.uk/members-only/account/\">My Account</a> page.  From here you can see the last 2 years of your account history.</p>
 
-				<code>
-					<span class='subtitle'>Bank Account Details</span><br />
+				<div class='well'>
+					<em>Bank Account Details</em><br />
 					Name: <strong>CAMBRIDGESHIRE FLYBALL TEAM</strong><br />
-					A/C No: <strong>83848558</strong><br />
 					Sort Code: <strong>20-29-68</strong>
-				</code>
+					A/C No: <strong>83848558</strong><br />
+				</div>
 		
 <p>Any issues or queries please let me know.</p>
 		
