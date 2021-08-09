@@ -259,7 +259,7 @@
 
 		<?php
 		//debug_array($award_dates);
-		$stats = get_stats_for_dog(get_the_ID());
+		$stats = get_stats_for_dog(get_the_ID(), get_the_title());
 		if (count($stats) > 0){
 			echo "<h3>".get_the_title()."'s Results</h3>";
 			//debug_array($stats[0]);

@@ -28,7 +28,8 @@
 									else $time = $team->fastest_time;
 								}
 
-								$newFT = ($team->new_fastest) ? '<span class="label label-primary">New<span class="hidden-sm hidden-xs"> Fastest Time</span></span>' : '';
+								$ft_text = ($team->team_type == 'singles') ? 'PB' : 'Fastest Time';
+								$newFT = ($team->new_fastest) ? '<span class="label label-primary">New<span class="hidden-sm hidden-xs"> '.$ft_text.'</span></span>' : '';
 
 								echo '
 									<tr>

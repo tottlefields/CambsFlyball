@@ -99,14 +99,15 @@ function get_stats_for_event($event_id){
 }
 
 
-function get_stats_for_dog($dog_id){
+function get_stats_for_dog($dog_id, $name){
 	global $wpdb;
 
 	return $wpdb->get_results("select dog_id, post_title as event_title, post_name as slug, points, heats, t1.fastest_time, average_time, consistency, 
-	t1.team, t1.race_date, case when (division>0) then concat('Div ', division) else division end as division, place 
+	t1.team, t1.race_date, case when (division>0) then concat('Div ', division) else division end as division, place, team_type 
 	from cft_dog_stats t1 left outer join wp_posts t2 on t1.event_id=t2.ID 
-	left outer join cft_event_stats t3 on t1.event_id=t3.event_id and t1.race_date=t3.race_date and t1.team=t3.team
-	where dog_id=".$dog_id." order by race_date DESC");
+	left outer join cft_event_stats t3 on t1.event_id=t3.event_id and t1.race_date=t3.race_date 
+	where case when t1.team = 'Singles' then t3.team='Singles - ".$name."' else t1.team=t3.team end and dog_id=".$dog_id." 
+	order by race_date DESC");
 }
 
 function get_awards_for_event($start_date, $end_date){
