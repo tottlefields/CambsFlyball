@@ -52,6 +52,8 @@ get_header(); ?>
 			/* Start the Loop */
 			while ( have_posts() ) : the_post();
 			
+				if (!get_field('member') || get_field('member') != 1){ continue; }
+
 				if (get_field('retired') && get_field('retired') == 1){
 //					array_push($retired_dogs, $post);
 					$retired_date = get_field('date_retired', get_the_ID(), false);
