@@ -116,6 +116,7 @@ get_header();
 										<td rowspan="2">&nbsp;</td>
 					<?php
 					$dates = array();
+					$last_row = '<tr><td rowspan="2">&nbsp;</td>';
 					foreach($comps as $comp) : setup_postdata($comp); 
 						$start_date = DateTime::createFromFormat('Ymd', get_post_meta( $comp->ID, 'start_date', true ), $tz);
 						$end_date   = DateTime::createFromFormat('Ymd', get_post_meta( $comp->ID, 'end_date', true ), $tz);
@@ -130,6 +131,7 @@ get_header();
 						$dates[$comp->ID] = $compDates;
 						//array_push($dates, $compDates);
 						//debug_array($dates);
+						$last_row .= '<th class="text-center" colspan="'.count($compDates).'"><'.$comp->post_title.'></th>';
 					?>
 										<th class="text-center" colspan="<?php echo count($compDates); ?>"><a href="<?php echo get_permalink($comp); ?>"><?php echo $comp->post_title; ?></a>
 						<?php if (get_post_meta( $comp->ID, 'w3w', true ) != '') { 
@@ -138,7 +140,7 @@ get_header();
 							</a>';
 						} ?>
 									</th>
-						<?php endforeach;?>
+						<?php endforeach; $last_row .= '</tr>'; ?>
 									</tr>
 									<tr>
 						<?php 
@@ -149,7 +151,7 @@ get_header();
 								echo '<th class="text-center" width="5%">'.DateTime::createFromFormat('Ymd', $date)->format('jS M').'</th>';
 							}
 						} ?>
-									</tr>
+									</tr></thead>
 						<?php foreach ($dogs as $dog){
 								if (get_post_meta( $dog->ID, 'member', true ) != 1){ continue; }
 
@@ -209,8 +211,7 @@ get_header();
 								}
 								echo '</tr>';
 						} ?>
-
-								</thead>
+							<tfoot><?php echo $last_row; ?></tfoot>
 							</table>
 						</div>		
 					</div>
