@@ -93,9 +93,11 @@ function get_results_for_event($event_id){
 function get_stats_for_event($event_id){
 	global $wpdb;
 
-	return $wpdb->get_results("select dog_id, post_title as name, post_name as slug, points, heats, fastest_time, average_time, consistency, team, race_date 
-	from cft_dog_stats t1 left outer join wp_posts t2 on t1.dog_id=t2.ID 
-	where event_id=".$event_id." order by post_title");
+	return $wpdb->get_results("select dog_id, post_title as name, post_name as slug, points, heats, fastest_time, average_time, consistency, team, race_date, meta_value as is_member 
+	from cft_dog_stats t1 left outer join wp_posts t2 on t1.dog_id=t2.ID
+	left outer join wp_postmeta t3 on t2.ID=t3.post_id
+	where event_id=".$event_id." and t3.meta_key='member' 
+	order by post_title");
 }
 
 
