@@ -131,7 +131,7 @@ get_header();
 						$dates[$comp->ID] = $compDates;
 						//array_push($dates, $compDates);
 						//debug_array($dates);
-						$last_row .= '<th class="text-center" colspan="'.count($compDates).'"><'.$comp->post_title.'></th>';
+						$last_row .= '<th class="text-center" colspan="'.count($compDates).'">'.$comp->post_title.'</th>';
 					?>
 										<th class="text-center" colspan="<?php echo count($compDates); ?>"><a href="<?php echo get_permalink($comp); ?>"><?php echo $comp->post_title; ?></a>
 						<?php if (get_post_meta( $comp->ID, 'w3w', true ) != '') { 
