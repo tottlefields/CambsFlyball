@@ -151,6 +151,8 @@ get_header();
 						} ?>
 									</tr>
 						<?php foreach ($dogs as $dog){
+								if (get_post_meta( $dog->ID, 'member', true ) != 1){ continue; }
+
 								$dob = DateTime::createFromFormat('Ymd', get_post_meta( $dog->ID, 'date_of_birth', true ), $tz);
 								$age = $dob->diff(new DateTime('now', $tz))->y;
 								$ageOK = ($age > 0) ? 1 : 0;
