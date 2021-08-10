@@ -128,7 +128,7 @@ foreach($team_posts as $team){
 
 						<?php foreach ($stats as $dog){
 							$award = (in_array($dog->dog_id, array_keys($awards))) ? '<span class="label label-primary">'.$awards[$dog->dog_id].'</span>' : '';
-							$dogCell = (isset($dog->slug)) ?'<a href="/dogs/'.$dog->slug.'">'.$dog->name.'</a>' : $dog->name;
+							$dogCell = (isset($dog->slug) && $dog->is_member) ?'<a href="/dogs/'.$dog->slug.'">'.$dog->name.'</a>' : $dog->name;
 							echo '
 								<tr>
 									<td class="text-center">'.$dogCell.'</td>
