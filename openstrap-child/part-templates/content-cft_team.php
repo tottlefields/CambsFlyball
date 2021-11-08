@@ -51,8 +51,10 @@
 						<td class="text-center"><a href="/'.$row->slug.'">'.$row->event_title.'</a></div></td>
 						<td class="text-center">'.$row->division.' ('.$row->seed.getOrdinal($row->seed).')</td>';
 					if ($row->place == 1){  echo '<td class="text-center"><span class="text-primary"><strong>1st</strong></span></td>'; }
-					else { echo '<td class="text-center">'.$row->place.getOrdinal($row->place).'</td>'; }
+					elseif ($row->place > 1) { echo '<td class="text-center">'.$row->place.getOrdinal($row->place).'</td>'; }
+					else { echo '<td class="text-center">'.$row->place.'</td>'; }
 					if ($row->new_fastest == 1){ echo '<td class="text-center"><span class="text-primary"><strong>'.$row->fastest_time.'</strong></span></td>'; }
+					elseif($row->fastest_time == 0){ echo '<td class="text-center">N/T</td>'; }
 					else { echo '<td class="text-center">'.$row->fastest_time.'</td>'; }
 					echo '</tr>';
 				}
