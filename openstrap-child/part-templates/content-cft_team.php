@@ -15,6 +15,7 @@
 		</hgroup>
 		
 		<?php $dogs = get_dogs_for_team(get_the_ID());
+		$results = get_results_for_team(get_the_ID());
 		if (count($dogs)>0){ ?>
 		<h5>Dogs in this team -<?php foreach ($dogs as $dog){ echo ' <a href="'.get_permalink( $dog->ID ).'">'.$dog->post_title.'</a>'; }?></h5>
 		<?php } else { ?>
@@ -34,8 +35,31 @@
 			</div>
 			
 			<div class="col-xs-12 col-sm-12 col-md-7">
-			
-			
+			<?php if (count($results) > 0){ 
+				echo '<small><table class="table table-condensed">
+				<tr>
+					<th style="background-color:#E5E5E5" class="text-center">Date</div></th>
+					<th style="background-color:#E5E5E5" class="text-center">Event</div></th>
+					<th style="background-color:#E5E5E5" class="text-center">Div (Seed)</div></th>
+					<th style="background-color:#E5E5E5" class="text-center">Place</div></th>
+					<th style="background-color:#E5E5E5" class="text-center">F/T</div></th>
+				</tr>';
+				foreach ($results as $row){
+					$race_date = DateTime::createFromFormat('Ymd', $row->race_date);
+					echo '<tr>
+						<td class="text-center">'.$race_date->format('jS F Y').'</div></td>
+						<td class="text-center"><a href="/'.$row->slug.'">'.$row->event_title.'</a></div></td>
+						<td class="text-center">'.$row->division.' ('.$row->seed.getOrdinal($row->seed).')</td>';
+					if ($row->place == 1){  echo '<td class="text-center"><span class="text-primary"><strong>1st</strong></span></td>'; }
+					else { echo '<td class="text-center">'.$row->place.getOrdinal($row->place).'</td>'; }
+					if ($row->new_fastest == 1){ echo '<td class="text-center"><span class="text-primary"><strong>'.$row->fastest_time.'</strong></span></td>'; }
+					else { echo '<td class="text-center">'.$row->fastest_time.'</td>'; }
+					echo '</tr>';
+				}
+				echo '</table></small>';
+				
+				//debug_array($results); 
+				} ?>			
 			</div>
 			
 			

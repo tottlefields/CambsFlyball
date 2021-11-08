@@ -81,6 +81,16 @@ function get_dogs_for_user($user){
 }
 
 
+function get_results_for_team($team_id){
+	global $wpdb;
+
+	return $wpdb->get_results("select post_title as event_title, post_name as slug, team_type, 
+	race_date, case when (division>0) then concat('Div ', division) else division end as division, seed, place, fastest_time, new_fastest 
+	from cft_event_stats left outer join wp_posts on event_id=wp_posts.ID 
+	where team_id=".$team_id." order by race_date desc limit 8");
+}
+
+
 function get_results_for_event($event_id){
 	global $wpdb;
 
