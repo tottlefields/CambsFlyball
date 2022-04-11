@@ -127,7 +127,7 @@ foreach($team_posts as $team){
 							</tr>
 
 						<?php foreach ($stats as $dog){
-							$award = (in_array($dog->dog_id, array_keys($awards))) ? '<span class="label label-primary">'.$awards[$dog->dog_id].'</span>' : '';
+							$award = (in_array($dog->dog_id, array_keys($awards))) ? '<span class="label label-default">'.$awards[$dog->dog_id].'</span>' : '';
 							if ($dog->new_fastest == 1){ $award .= ' <span class="label label-primary">New PB</span>'; }
 							$dogCell = (isset($dog->slug) && $dog->is_member) ?'<a href="/dogs/'.$dog->slug.'">'.$dog->name.'</a>' : $dog->name;
 							echo '
