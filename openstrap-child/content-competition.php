@@ -95,7 +95,7 @@ foreach($team_posts as $team){
 		</div><!-- .entry-content -->	
 		<hr/>
 	<?php } ?>
-	<div class="row">
+	<div class="row" style="clear:both">
 		<div class="col-xs-12">
 			<h3>Results</h3>
 			<div class="row">
@@ -189,7 +189,7 @@ foreach($team_posts as $team){
 					$label = '<span class="label label-primary">'.$team->team_type->name.'</span>';
 					if ($team->team_type->slug == 'little-league'){ $label = '<span class="label label-info">'.$team->team_type->name.'</span>'; }
 					if ($team->team_type->slug == 'pre-cadets'){ $label = '<span class="label label-default">'.$team->team_type->name.'</span>'; }
-					echo '<tr><th>'.$team->post_title.'&nbsp;'.$label.'</th>';
+					echo '<tr><th nowrap>'.$team->post_title.'&nbsp;'.$label.'</th>';
 					for ($i=0; $i<$max_dogs; $i++){
 						if (isset($team->dogs[$i])){
 							$dog = $team->dogs[$i];

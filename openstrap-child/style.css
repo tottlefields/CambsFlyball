@@ -1,7 +1,7 @@
 /*
 Theme Name: Cambridgeshire Flyball (Openstrap)
 Theme URI:
-Version: 1.0.2
+Version: 1.0.3
 Template: openstrap
 */
 
@@ -11,6 +11,7 @@ Template: openstrap
 
  
 #main-container img.aligncenter { margin-left: auto;  margin-right: auto; }
+img.no-border { border: 0px; box-shadow: none; }
 
 td.diary-click { cursor: pointer; }
 td.diary-noclick { cursor: not-allowed; }

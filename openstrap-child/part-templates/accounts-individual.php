@@ -37,7 +37,7 @@
 																	<option value="CASH">Cash</option>
 																	<option value="CHQ">Cheque</option>
 																	<option value="INVOICE">Invoice</option>
-																	<!-- <option value="PAYPAL">PayPal</option> -->
+																	<option value="PAYPAL">PayPal</option>
 																</select>
 															</div>															
 															<!-- <label for="category" class="sr-only">Category</label>

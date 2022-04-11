@@ -42,7 +42,7 @@ get_header();
 	        <?php   
 		        	$money = get_members_money($user);
 		        	if ($money['balance'] > 0) {
-		        		echo '<div class="alert alert-danger" role="alert">You currently owe <span class="text-danger"><strong>&pound;'.number_format($money['balance'], 2).'</strong></span> to Cambridgeshire Flyball.</div>';
+		        		echo '<div class="alert alert-danger" role="alert">You currently owe <span class="text-danger"><strong>&pound;'.number_format($money['balance'], 2).'</strong></span> to Cambridgeshire Flyball.<span class="pull-right"><a href="https://www.paypal.com/paypalme/cambsflyball" target="_blank"><img src="https://cambridgeshire-flyball.org.uk/wp-content/uploads/2021/11/paypal.png" style="height: 30px; margin-top: -5px;"></a></span></div>';
 		        	} else {
 		        		echo '<div class="alert alert-success" role="alert">You are currently <span class="text-success"><strong>&pound;'.number_format(-1*$money['balance'], 2).'</strong></span> in credit with Cambridgeshire Flyball.</div>';
 	        		}

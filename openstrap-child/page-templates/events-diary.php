@@ -35,23 +35,23 @@ $otherDogs = array();
 $group = get_user_meta($current_user->ID, 'household_group', true);
 if (isset($group) && $group != ''){	
 	$myDogs = get_posts(array(
-		'post_status'     => array('publish'),
-		'post_type'				=> 'cft_dog',
-		'posts_per_page'	=> -1,
-		'orderby'					=> 'title',
-		'order'						=> 'ASC',
-		'meta_query'			=> array(
+		'post_status' => array('publish'),
+		'post_type' => 'cft_dog',
+		'posts_per_page' => -1,
+		'orderby' => 'title',
+		'order' => 'ASC',
+		'meta_query' => array(
 			array('key' => 'household_group', 'value' => $group)
 		)
 	));
 
 	$otherDogs = get_posts(array(
-		'post_status'     => array('publish'),
-		'post_type'				=> 'cft_dog',
-		'posts_per_page'	=> -1,
-		'orderby'					=> 'title',
-		'order'						=> 'ASC',
-		'meta_query'			=> array(
+		'post_status' => array('publish'),
+		'post_type' => 'cft_dog',
+		'posts_per_page' => -1,
+		'orderby' => 'title',
+		'order' => 'ASC',
+		'meta_query' => array(
 			'relation' => 'OR',
 			array('key' => 'household_group', 'value' => $group, 'compare' => '!='),
 			array('key' => 'household_group', 'value' => $group, 'compare' => 'NOT EXISTS'),
@@ -60,21 +60,21 @@ if (isset($group) && $group != ''){
 
 } else {
 	$myDogs = get_posts(array(
-		'post_status'     => array('publish'),
-		'post_type'				=> 'cft_dog',
-		'posts_per_page'	=> -1,
-		'orderby'					=> 'title',
-		'order'						=> 'ASC',
-		'author'					=> $current_user->ID
+		'post_status' => array('publish'),
+		'post_type' => 'cft_dog',
+		'posts_per_page' => -1,
+		'orderby' => 'title',
+		'order'	=> 'ASC',
+		'author' => $current_user->ID
 	));
 
 	$otherDogs = get_posts(array(
-		'post_status'     => array('publish'),
-		'post_type'				=> 'cft_dog',
-		'posts_per_page'	=> -1,
-		'orderby'					=> 'title',
-		'order'						=> 'ASC',
-		'author__not_in'	=> array($current_user->ID)
+		'post_status' => array('publish'),
+		'post_type' => 'cft_dog',
+		'posts_per_page' => -1,
+		'orderby' => 'title',
+		'order' => 'ASC',
+		'author__not_in' => array($current_user->ID)
 	));
 }
 
@@ -158,12 +158,13 @@ get_header();
 								$dob = DateTime::createFromFormat('Ymd', get_post_meta( $dog->ID, 'date_of_birth', true ), $tz);
 								$age = $dob->diff(new DateTime('now', $tz))->y;
 								$ageOK = ($age > 0) ? 1 : 0;
+								$lname = get_the_author_meta('last_name', $dog->post_author);
 
 								//if ($dog->post_author == $current_user->ID){
 								if (in_array($dog, $myDogs)){
 									echo '<tr><td class="danger"><strong>'.$dog->post_title.'</strong></td>';
 								}else{
-									echo '<tr><td>'.$dog->post_title.'</td>';
+									echo '<tr><td>'.$dog->post_title.'&nbsp;<small style="color: #777;"><em>'.$lname.'</em></small></td>';
 								}
 								foreach ($dates as $compID => $array){
 									$editable = 0;
