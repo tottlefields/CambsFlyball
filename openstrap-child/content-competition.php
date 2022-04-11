@@ -123,11 +123,12 @@ foreach($team_posts as $team){
 								<th class="text-center hidden-xs">Average Time</th>
 								<th class="text-center hidden-xs">Consistency (%)</th>
 								<th class="text-center">Points Gained</th>
-								<th class="text-center">Award Earned</th>
+								<th class="text-center">Award(s) Earned</th>
 							</tr>
 
 						<?php foreach ($stats as $dog){
 							$award = (in_array($dog->dog_id, array_keys($awards))) ? '<span class="label label-primary">'.$awards[$dog->dog_id].'</span>' : '';
+							if ($dog->new_fastest == 1){ $award .= ' <span class="label label-primary">New PB</span>'; }
 							$dogCell = (isset($dog->slug) && $dog->is_member) ?'<a href="/dogs/'.$dog->slug.'">'.$dog->name.'</a>' : $dog->name;
 							echo '
 								<tr>
