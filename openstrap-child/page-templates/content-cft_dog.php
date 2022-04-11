@@ -277,6 +277,7 @@
 			foreach ($stats as $row){
 				$race_date = DateTime::createFromFormat('Ymd', $row->race_date);
 				$award = (isset($award_dates[$row->race_date])) ? '<span class="label label-primary">'.$award_dates[$row->race_date].'</span>' : '&nbsp;';
+				if ($row->new_fastest == 1){ $award .= ' <span class="label label-primary">New PB</span>'; }
 				echo '<tr>';
 				echo '<td class="text-center"><a href="/'.$row->slug.'">'.$row->event_title.'</a><span class="hidden-xs"><br /><em>'.$race_date->format('jS F Y').'</em></span></td>';
 				echo '<td class="text-center">'.$row->team.'<span class="hidden-xs"><br /><em>'.$row->place.getOrdinal($row->place);
