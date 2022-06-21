@@ -1,18 +1,18 @@
 <?php
 // Creating the widget 
-class wpb_widget extends WP_Widget {
+class cft_widget extends WP_Widget {
   
 function __construct() {
 parent::__construct(
   
 // Base ID of your widget
-'wpb_widget', 
+'cft_widget', 
   
 // Widget name will appear in UI
-__('WPBeginner Widget', 'wpb_widget_domain'), 
+__('WPBeginner Widget', 'cft_widget_domain'), 
   
 // Widget description
-array( 'description' => __( 'Sample widget based on WPBeginner Tutorial', 'wpb_widget_domain' ), ) 
+array( 'description' => __( 'Sample widget based on WPBeginner Tutorial', 'cft_widget_domain' ), ) 
 );
 }
   
@@ -27,7 +27,7 @@ if ( ! empty( $title ) )
 echo $args['before_title'] . $title . $args['after_title'];
   
 // This is where you run the code and display the output
-echo __( 'Hello, World!', 'wpb_widget_domain' );
+echo __( 'Hello, World!', 'cft_widget_domain' );
 echo $args['after_widget'];
 }
           
@@ -37,7 +37,7 @@ if ( isset( $instance[ 'title' ] ) ) {
 $title = $instance[ 'title' ];
 }
 else {
-$title = __( 'New title', 'wpb_widget_domain' );
+$title = __( 'New title', 'cft_widget_domain' );
 }
 // Widget admin form
 ?>
@@ -55,12 +55,12 @@ $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_in
 return $instance;
 }
  
-// Class wpb_widget ends here
+// Class cft_widget ends here
 } 
  
  
 // Register and load the widget
 function wpb_load_widget() {
-    register_widget( 'wpb_widget' );
+    register_widget( 'cft_widget' );
 }
 add_action( 'widgets_init', 'wpb_load_widget' );
