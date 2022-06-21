@@ -20,7 +20,8 @@ require_once 'posttypes.php';
 
 
 //Front Page Text
-require('widgets/wpb-widget.php');
+//require('widgets/wpb-widget.php');
+require('widgets/cft-widget.php');
 
 function cft_load_custom_widgets() {
         //register_widget( 'wpb_widget' );
