@@ -16,27 +16,46 @@ class cft_widget extends WP_Widget {
         );
     }
     
-    // Creating widget front-end
-    
+    // Creating widget front-end    
     public function widget( $args, $instance ) {
-    $title = apply_filters( 'widget_title', $instance['title'] );
-    
-    // before and after widget arguments are defined by themes
-    echo $args['before_widget'];
-    if ( ! empty( $title ) )
-    echo $args['before_title'] . $title . $args['after_title'];
-    
-    // This is where you run the code and display the output
-    echo __( 'Hello, World!', 'cft_widget_domain' );
-    echo $args['after_widget'];
+        $title = apply_filters( 'widget_title', $instance['title'] );
+        
+        // before and after widget arguments are defined by themes
+        echo $args['before_widget'];
+        if ( ! empty( $title ) )
+        echo $args['before_title'] . $title . $args['after_title'];
+
+
+        // This is where you run the code and display the output
+        global $wpdb;
+        $sql = "select seed_position, seed_time, race_date, is_mb, replace(lower(team_name), ' ', '-') as slug, replace(team_name, 'Cambridgeshire ', '') as team
+        from seed_list where team_name like 'Cambridgeshire%' order by is_mb asc, seed_position";
+        $results = $wpdb->get_results($sql);
+
+        if (count($results) > 0){
+            echo '<table><tbody>';
+            //<tr><td class="has-text-align-center" data-align="center">9th</td>
+            //<td><a href="/teams/cambridgeshire-canines/" data-type="URL">Canines</a></td>
+            //<td class="has-text-align-center" data-align="center">15.78</td></tr>
+            //<tr><td class="has-text-align-center" data-align="center">25th</td><td><a href="/teams/cambridgeshire-catapults/">Catapults</a></td><td class="has-text-align-center" data-align="center">16.92</td></tr><tr><td class="has-text-align-center" data-align="center">46th</td><td><a href="/teams/cambridgeshire-cannons/">Cannons</a></td><td class="has-text-align-center" data-align="center">17.86</td></tr><tr><td class="has-text-align-center" data-align="center">71st</td><td><a href="/teams/cambridgeshire-crossbows/">Crossbows</a></td><td class="has-text-align-center" data-align="center">19.67</td></tr><tr><td class="has-text-align-center" data-align="center">79th</td><td><a href="/teams/cambridgeshire-crusaders/">Crusaders</a></td><td class="has-text-align-center" data-align="center">20.27</td></tr><tr><td class="has-text-align-center" data-align="center">91st</td><td><a href="/teams/cambridgeshire-chargers/">Chargers</a></td><td class="has-text-align-center" data-align="center">21.10</td></tr>
+            foreach ($results as $row){
+                echo '<tr>
+                <td class="has-text-align-center" data-align="center">'.getOrdinal($row['seed_postition']).'</td>
+                <td><a href="/teams/'.$row['slub'].'/" data-type="URL">'.$row['team'].'</a></td>
+                <td class="has-text-align-center" data-align="center">'.number_format($row['seed_time'], 2).'</td></tr>';
+            }
+            echo '</tbody></table>';            
+        }
+        
+        //echo __( 'Hello, World!', 'cft_widget_domain' );
+        echo $args['after_widget'];
     }
             
     // Widget Backend 
     public function form( $instance ) {
         if ( isset( $instance[ 'title' ] ) ) {
             $title = $instance[ 'title' ];
-        }
-            else {
+        } else {
             $title = __( 'Current Seedings', 'cft_widget_domain' );
         }
         // Widget admin form
