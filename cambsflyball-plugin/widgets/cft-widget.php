@@ -76,6 +76,58 @@ class cft_widget extends WP_Widget {
     
     // Class cft_widget ends here
 } 
+
+function getOrdinal($number=0){
+    // Handles special case three digit numbers ending
+	// with 11, 12 or 13 - ie, 111th, 112th, 113th, 211th, et al
+	If ($number > 99) {
+					$intEndNum = substr($number,-2);
+					If ($intEndNum >= 11 And $intEndNum <= 13) {
+									switch ($intEndNum){
+													Case (11 or 12 or 13):
+													Return "th";
+													break;
+									}
+					}
+	}
+	If ($number >= 21) {
+	// Handles 21st, 22nd, 23rd, et al
+					switch (substr($number,-1)) {
+									Case 0:
+									Return "th";
+									break;
+									Case 1:
+									Return "st";
+									break;
+									Case 2:
+									Return "nd";
+									break;
+									Case 3:
+									Return "rd";
+									break;
+									Case (4 || 5 || 6 || 7 || 8 || 9):
+									Return "th";
+									break;
+					}
+	} else {
+					// Handles 1st to 20th
+					switch ($number){
+									Case 1:
+									Return "st";
+									break;
+									Case 2:
+									Return "nd";
+									break;
+									Case 3:
+									Return "rd";
+									break;
+									Case (4 || 5 || 6 || 7 || 8 || 9 || 10 || 11 || 12 || 13 || 14 || 15 || 16 || 17 || 18 || 19 || 20):
+									Return "th";
+									break;
+					}
+	}
+} // end func am_GetOrdinal
+
  
  
 // Register and load the widget
