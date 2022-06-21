@@ -35,7 +35,7 @@ class cft_widget extends WP_Widget {
 
         if (count($results) > 0){
             echo '<figure class="wp-block-table is-style-stripes">
-            <h5>League Teams</h5>
+            <h5><a href="https://www.ukflyball.org.uk/statistics/league-list/" target="_blank">League Teams</a></h5>
             <table><tbody>';
             //<tr><td class="has-text-align-center" data-align="center">9th</td>
             //<td><a href="/teams/cambridgeshire-canines/" data-type="URL">Canines</a></td>
@@ -56,7 +56,7 @@ class cft_widget extends WP_Widget {
 
         if (count($results) > 0){
             echo '<figure class="wp-block-table is-style-stripes">
-            <h5>Multi-breed Teams</h5>
+            <h5><a href="https://www.ukflyball.org.uk/statistics/multi-breed-list/" target="_blank">Multi-breed Teams</a></h5>
             <table><tbody>';
             //<tr><td class="has-text-align-center" data-align="center">9th</td>
             //<td><a href="/teams/cambridgeshire-canines/" data-type="URL">Canines</a></td>
