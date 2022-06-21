@@ -19,7 +19,11 @@ function get_dogs_for_team($team_id){
 			'post_type'     => 'cft_dog',
 			'post_status'   => array('publish'),
 			'posts_per_page'=> -1,
-			'meta_query'	=> array(array('key' => 'team', 'value' => $team_id, 'compare' => '=')),
+			'meta_query'	=> array(
+				'relation' => 'OR',
+				array('key' => 'team', 'value' => $team_id, 'compare' => '='),
+				array('key' => 'mb_team', 'value' => $team_id, 'compare' => '='),
+			),
 			'orderby'		=> 'name',
 			'order'			=> 'ASC'
 	);

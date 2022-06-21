@@ -24,6 +24,7 @@ require('widgets/wpb-widget.php');
 
 function cft_load_custom_widgets() {
         register_widget( 'wpb_widget' );
+        register_widget( 'wpb_widget' );
 }
 add_action('widgets_init', 'cft_load_custom_widgets');
 
