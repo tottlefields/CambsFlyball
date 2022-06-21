@@ -40,7 +40,7 @@ class cft_widget extends WP_Widget {
             //<tr><td class="has-text-align-center" data-align="center">25th</td><td><a href="/teams/cambridgeshire-catapults/">Catapults</a></td><td class="has-text-align-center" data-align="center">16.92</td></tr><tr><td class="has-text-align-center" data-align="center">46th</td><td><a href="/teams/cambridgeshire-cannons/">Cannons</a></td><td class="has-text-align-center" data-align="center">17.86</td></tr><tr><td class="has-text-align-center" data-align="center">71st</td><td><a href="/teams/cambridgeshire-crossbows/">Crossbows</a></td><td class="has-text-align-center" data-align="center">19.67</td></tr><tr><td class="has-text-align-center" data-align="center">79th</td><td><a href="/teams/cambridgeshire-crusaders/">Crusaders</a></td><td class="has-text-align-center" data-align="center">20.27</td></tr><tr><td class="has-text-align-center" data-align="center">91st</td><td><a href="/teams/cambridgeshire-chargers/">Chargers</a></td><td class="has-text-align-center" data-align="center">21.10</td></tr>
             foreach ($results as $row){
                 echo '<tr>
-                <td class="has-text-align-center" data-align="center">'.getOrdinal($row->seed_position).'</td>
+                <td class="has-text-align-center" data-align="center">'.$row->seed_position.getOrdinal($row->seed_position).'</td>
                 <td><a href="/teams/'.$row->slug.'/" data-type="URL">'.$row->team.'</a></td>
                 <td class="has-text-align-center" data-align="center">'.number_format($row->seed_time, 2).'</td></tr>';
             }
