@@ -35,7 +35,7 @@ class cft_widget extends WP_Widget {
 
         if (count($results) > 0){
             echo '<figure class="wp-block-table is-style-stripes">
-            <h4>League Teams</h4>
+            <h5>League Teams</h5>
             <table><tbody>';
             //<tr><td class="has-text-align-center" data-align="center">9th</td>
             //<td><a href="/teams/cambridgeshire-canines/" data-type="URL">Canines</a></td>
@@ -56,7 +56,7 @@ class cft_widget extends WP_Widget {
 
         if (count($results) > 0){
             echo '<figure class="wp-block-table is-style-stripes">
-            <h4>Multi-breed Teams</h4>
+            <h5>Multi-breed Teams</h5>
             <table><tbody>';
             //<tr><td class="has-text-align-center" data-align="center">9th</td>
             //<td><a href="/teams/cambridgeshire-canines/" data-type="URL">Canines</a></td>
