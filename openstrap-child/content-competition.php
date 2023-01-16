@@ -188,6 +188,7 @@ foreach($team_posts as $team){
 				foreach ($teams as $team){
 					$dog_count = 0;
 					$label = '<span class="label label-primary">'.$team->team_type->name.'</span>';
+					if ($team->team_type->slug == 'multi-breed'){ continue; }
 					if ($team->team_type->slug == 'little-league'){ $label = '<span class="label label-info">'.$team->team_type->name.'</span>'; }
 					if ($team->team_type->slug == 'pre-cadets'){ $label = '<span class="label label-default">'.$team->team_type->name.'</span>'; }
 					echo '<tr><th nowrap>'.$team->post_title.'&nbsp;'.$label.'</th>';

@@ -115,14 +115,14 @@ get_header();
 						<div class="panel-body">
 							<div class="row">
 							<?php $dogs = get_dogs_for_user($user); ?>						
-							<?php 
-							while (list($i, $post) = each($dogs)) :
+							<?php
+							foreach ($dogs as $post){ 
 				    			setup_postdata($post); ?>
 								<div class="col-xs-6 col-sm-3 col-md-6">
 									<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
 								</div>
 							
-							<?php endwhile; wp_reset_postdata(); ?>
+							<?php } wp_reset_postdata(); ?>
 							</div>
 						</div>
 					</div>				

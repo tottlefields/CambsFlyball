@@ -88,13 +88,15 @@ get_header(); ?>
 			<?php
 			krsort($retired_dogs);
 			foreach ($retired_dogs as $date => $dogs){
-				while (list($i, $post) = each($dogs)) :
+				foreach ($dogs as $post){
+//				while (list($i, $post) = each($dogs)) :
     					setup_postdata($post); ?>
 				<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 					<?php get_template_part( 'part-templates/content', get_post_type() ); ?>
 				</div>
 			
-				<?php endwhile;
+				<?php //endwhile;
+				}
 				// don't forget to restore the main queried object after the loop!
 				wp_reset_postdata();
 			}
